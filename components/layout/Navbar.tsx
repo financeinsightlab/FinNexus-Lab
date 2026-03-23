@@ -16,22 +16,56 @@ const navLinks = [
   { label: 'Tracker', href: '/tracker' },
 ];
 
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  const isMounted = typeof window !== 'undefined';
+
+  // Avoid hydration mismatch by rendering nothing until mounted in browser.
+  if (!isMounted) return null;
+
+  return (
+    <button
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      className="p-2 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+      aria-label="Toggle Theme"
+    >
+      {theme === 'dark' ? (
+        // Sun icon
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5 text-yellow-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <circle cx="12" cy="12" r="5" />
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+        </svg>
+      ) : (
+        // Moon icon
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isSolid, setIsSolid] = useState(false);
 
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
     const handleScroll = () => setIsSolid(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    setMounted(true);
   }, []);
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
@@ -58,44 +92,6 @@ export default function Navbar() {
     const base = 'block px-4 py-3 text-base font-medium transition-colors';
     if (isActive(href)) return `${base} text-brand-teal`;
     return `${base} text-brand-slate hover:text-brand-navy`;
-  };
-
-  // ✅ THEME TOGGLE (UPDATED ICON COLOR)
-  const ThemeToggle = () => {
-    if (!mounted) return null;
-
-    return (
-      <button
-        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        className="p-2 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
-        aria-label="Toggle Theme"
-      >
-        {theme === 'dark' ? (
-          // ☀️ Yellow Sun
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 text-yellow-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <circle cx="12" cy="12" r="5" />
-            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-          </svg>
-        ) : (
-          // 🌙 Moon
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-          </svg>
-        )}
-      </button>
-    );
   };
 
   return (
