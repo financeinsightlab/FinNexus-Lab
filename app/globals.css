@@ -206,3 +206,117 @@
   width: 0%;
   transition: width 0.1s linear;
 }
+/* =========================
+   DARK MODE TOKENS
+========================= */
+
+.dark body {
+  background: #0F1117;
+  color: #CBD5E1;
+}
+
+.dark .card {
+  background: #1A1F2E;
+  border-color: #2D3748;
+}
+
+.dark .research-card {
+  background: #1A1F2E;
+  border-color: #2D3748;
+}
+
+.dark .input {
+  background: #1A1F2E;
+  border-color: #374151;
+  color: #E2E8F0;
+}
+
+.dark .pill-off {
+  background: #1A1F2E;
+  border-color: #374151;
+  color: #CBD5E1;
+}
+
+.dark h1,
+.dark h2,
+.dark h3 {
+  color: #E2E8F0;
+}
+
+.dark .text-brand-navy {
+  color: #E2E8F0;
+}
+
+.dark .text-brand-slate {
+  color: #94A3B8;
+}
+
+.dark .bg-white {
+  background: #0F1117;
+}
+
+.dark .bg-brand-silver {
+  background: #111827;
+}
+
+.dark .bg-brand-cream {
+  background: #0F1117;
+}
+
+.dark .border-gray-100,
+.dark .border-gray-200 {
+  border-color: #1F2937;
+}
+
+.dark header.bg-white\/95 {
+  background: rgba(15, 17, 23, 0.95) !important;
+}
+/* =========================
+   DARK MODE ENHANCED DEPTH
+========================= */
+
+/* Section backgrounds */
+.dark section {
+  background: transparent;
+}
+
+/* Add subtle gradient to main background */
+.dark body {
+  background: radial-gradient(circle at top, #111827 0%, #0F1117 60%);
+}
+
+/* Cards feel elevated */
+.dark .card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Headings sharper */
+.dark h1,
+.dark h2,
+.dark h3 {
+  letter-spacing: -0.01em;
+}
+
+/* Improve paragraph readability */
+.dark p {
+  color: #94A3B8;
+}
+
+/* Buttons refinement */
+.dark .btn-primary {
+  background: #0D6E6E;
+}
+
+.dark .btn-primary:hover {
+  background: #0F9E9E;
+}
+
+/* Footer separation */
+.dark footer {
+  border-top: 1px solid #1F2937;
+}
+
+/* Navbar shadow tweak */
+.dark header {
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}

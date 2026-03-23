@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Analytics from '@/components/ui/Analytics';
+import Providers from '@/components/ThemeProvider'
 
 export const metadata: Metadata = {
   title: {
@@ -48,12 +49,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-white">
-        <Navbar />
-        <Analytics />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <Analytics />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </Providers>
       </body>
 
       {process.env.NEXT_PUBLIC_GA_ID && (

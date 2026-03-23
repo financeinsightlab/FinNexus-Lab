@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 
 const navLinks = [
   { label: 'Research', href: '/research' },
@@ -20,10 +21,18 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSolid, setIsSolid] = useState(false);
 
+  // ✅ DARK MODE LOGIC
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => setIsSolid(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
@@ -52,6 +61,44 @@ export default function Navbar() {
     return `${base} text-brand-slate hover:text-brand-navy`;
   };
 
+  // ✅ THEME TOGGLE COMPONENT
+  const ThemeToggle = () => {
+    if (!mounted) return null;
+
+    return (
+      <button
+        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        className="p-2 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+        aria-label="Toggle Theme"
+      >
+        {theme === 'dark' ? (
+          // ☀️ Sun Icon
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+          </svg>
+        ) : (
+          // 🌙 Moon Icon
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+        )}
+      </button>
+    );
+  };
+
   return (
     <header className={headerClasses}>
       <nav className="wrap flex items-center justify-between h-16">
@@ -68,10 +115,14 @@ export default function Navbar() {
           ))}
         </div>
 
+        {/* ✅ DESKTOP RIGHT SIDE */}
         <div className="hidden md:flex items-center space-x-4">
           <Link href="/resume" className="text-sm font-medium text-brand-slate hover:text-brand-navy transition-colors">
             Resume
           </Link>
+
+          <ThemeToggle />
+
           <Link href="/contact" className="btn btn-primary">
             Work With Me
           </Link>
@@ -116,6 +167,12 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* ✅ MOBILE THEME TOGGLE */}
+          <div className="px-4 py-2">
+            <ThemeToggle />
+          </div>
+
           <Link
             href="/resume"
             className="block px-4 py-3 text-base font-medium text-brand-slate hover:text-brand-navy transition-colors"
@@ -123,6 +180,7 @@ export default function Navbar() {
           >
             Resume
           </Link>
+
           <Link href="/contact" className="btn btn-primary mt-4" onClick={() => setIsOpen(false)}>
             Work With Me
           </Link>
