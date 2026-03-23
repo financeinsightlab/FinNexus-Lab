@@ -21,7 +21,6 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSolid, setIsSolid] = useState(false);
 
-  // ✅ DARK MODE LOGIC
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -61,7 +60,7 @@ export default function Navbar() {
     return `${base} text-brand-slate hover:text-brand-navy`;
   };
 
-  // ✅ THEME TOGGLE COMPONENT
+  // ✅ THEME TOGGLE (UPDATED ICON COLOR)
   const ThemeToggle = () => {
     if (!mounted) return null;
 
@@ -72,10 +71,10 @@ export default function Navbar() {
         aria-label="Toggle Theme"
       >
         {theme === 'dark' ? (
-          // ☀️ Sun Icon
+          // ☀️ Yellow Sun
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+            className="h-5 w-5 text-yellow-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -84,7 +83,7 @@ export default function Navbar() {
             <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
           </svg>
         ) : (
-          // 🌙 Moon Icon
+          // 🌙 Moon
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -115,7 +114,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* ✅ DESKTOP RIGHT SIDE */}
+        {/* DESKTOP */}
         <div className="hidden md:flex items-center space-x-4">
           <Link href="/resume" className="text-sm font-medium text-brand-slate hover:text-brand-navy transition-colors">
             Resume
@@ -128,54 +127,30 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden flex flex-col space-y-1 p-2"
-          aria-label="Toggle menu"
-        >
-          <div
-            className={`w-6 h-0.5 bg-current transition-all duration-300 ${
-              isOpen ? 'rotate-45 translate-y-1.5' : ''
-            }`}
-          />
-          <div
-            className={`w-6 h-0.5 bg-current transition-all duration-300 ${
-              isOpen ? 'opacity-0' : ''
-            }`}
-          />
-          <div
-            className={`w-6 h-0.5 bg-current transition-all duration-300 ${
-              isOpen ? '-rotate-45 -translate-y-1.5' : ''
-            }`}
-          />
-        </button>
+        {/* ✅ MOBILE RIGHT SIDE (UPDATED POSITION) */}
+        <div className="md:hidden flex items-center space-x-2">
+          <ThemeToggle />
+
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex flex-col space-y-1 p-2"
+            aria-label="Toggle menu"
+          >
+            <div className={`w-6 h-0.5 bg-current transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+            <div className={`w-6 h-0.5 bg-current transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
+            <div className={`w-6 h-0.5 bg-current transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+          </button>
+        </div>
       </nav>
 
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ${
-          isOpen ? 'max-h-screen' : 'max-h-0'
-        } bg-white border-t border-gray-100 shadow-lg`}
-      >
+      <div className={`md:hidden overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-screen' : 'max-h-0'} bg-white border-t border-gray-100 shadow-lg`}>
         <div className="flex flex-col space-y-1 p-4">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={mobileLinkClasses(link.href)}
-              onClick={() => setIsOpen(false)}
-            >
+            <Link key={link.href} href={link.href} className={mobileLinkClasses(link.href)} onClick={() => setIsOpen(false)}>
               {link.label}
             </Link>
           ))}
 
-          {/* ✅ MOBILE THEME TOGGLE */}
-          <div className="flex items-center justify-between px-4 py-3">
-  <span className="text-sm font-medium text-brand-slate">
-    Theme
-  </span>
-  <ThemeToggle />
- </div>
-         
           <Link
             href="/resume"
             className="block px-4 py-3 text-base font-medium text-brand-slate hover:text-brand-navy transition-colors"
