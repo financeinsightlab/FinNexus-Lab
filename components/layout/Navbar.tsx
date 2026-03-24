@@ -19,19 +19,41 @@ const navLinks = [
 
 function ThemeToggle({ inverted }: { inverted?: boolean }) {
   const { theme, setTheme } = useTheme();
-  const isMounted = typeof window !== 'undefined';
+  const [mounted, setMounted] = useState(false);
 
-  if (!isMounted) return null;
+  /** Runs after the placeholder button commits (avoids SSR/client markup mismatch). Safe with Strict Mode remounts. */
+  const afterHydrateRef = useCallback((el: HTMLButtonElement | null) => {
+    if (el) queueMicrotask(() => setMounted(true));
+  }, []);
+
+  const buttonClass = `min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-xl transition-colors focus-ring ${
+    inverted
+      ? 'text-white hover:bg-white/15 active:bg-white/25'
+      : 'text-brand-navy hover:bg-gray-100 dark:hover:bg-gray-800'
+  }`;
+
+  // Same button shell on server + first client paint — avoids hydration mismatch (see next-themes docs).
+  if (!mounted) {
+    return (
+      <button
+        ref={afterHydrateRef}
+        type="button"
+        className={buttonClass}
+        aria-label="Toggle theme"
+        disabled
+        aria-busy="true"
+      >
+        <span className="h-5 w-5 rounded-full border-2 border-current opacity-35" aria-hidden />
+      </button>
+    );
+  }
 
   return (
     <button
+      ref={afterHydrateRef}
       type="button"
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-xl transition-colors focus-ring ${
-        inverted
-          ? 'text-white hover:bg-white/15 active:bg-white/25'
-          : 'text-brand-navy hover:bg-gray-100 dark:hover:bg-gray-800'
-      }`}
+      className={buttonClass}
       aria-label="Toggle theme"
     >
       {theme === 'dark' ? (
