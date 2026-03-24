@@ -121,19 +121,19 @@ function CompactHit({ hit, onPick }: { hit: AlgoliaHit; onPick: () => void }) {
     <Link
       href={url}
       onClick={onPick}
-      className="flex min-h-[44px] flex-col justify-center gap-1 border-b border-gray-100 px-4 py-3 text-left last:border-b-0 hover:bg-brand-silver/60 active:bg-brand-silver"
+      className="flex min-h-[44px] min-w-0 max-w-full flex-col justify-center gap-1 border-b border-gray-100 px-3 py-3 text-left last:border-b-0 hover:bg-brand-silver/60 active:bg-brand-silver sm:px-4"
     >
-      <div className="flex items-center gap-2">
+      <div className="flex min-w-0 flex-wrap items-center gap-2">
         <span
-          className={`rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+          className={`max-w-full shrink-0 truncate rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
             hit.type === 'insight' ? 'bg-blue-100 text-blue-800' : 'bg-teal-100 text-teal-800'
           }`}
         >
           {badge}
         </span>
-        <span className="text-xs text-gray-400">{hit.type === 'insight' ? 'Insight' : 'Research'}</span>
+        <span className="shrink-0 text-xs text-gray-400">{hit.type === 'insight' ? 'Insight' : 'Research'}</span>
       </div>
-      <span className="line-clamp-2 font-semibold text-brand-navy">{title}</span>
+      <span className="line-clamp-2 break-words font-semibold text-brand-navy">{title}</span>
       {subtitle ? <span className="line-clamp-2 text-sm text-brand-slate">{subtitle}</span> : null}
     </Link>
   );
@@ -195,7 +195,7 @@ export default function GlobalSearch({ open, onClose }: GlobalSearchProps) {
   const fallbackContent = (
     <div
       ref={panelRef}
-      className="mx-3 w-full max-w-lg shrink-0 rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl sm:mx-auto"
+      className="w-full min-w-0 max-w-lg shrink-0 rounded-2xl border border-gray-200 bg-white p-4 shadow-2xl sm:p-6"
       style={panelStyle}
       role="dialog"
       aria-modal="true"
@@ -220,15 +220,18 @@ export default function GlobalSearch({ open, onClose }: GlobalSearchProps) {
   const searchContent = (
     <div
       ref={panelRef}
-      className="mx-3 flex min-h-0 w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:mx-auto sm:max-h-[min(90vh,720px)]"
+      className="flex min-h-0 w-full min-w-0 max-w-xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:max-h-[min(90vh,720px)]"
       style={panelStyle}
       role="dialog"
       aria-modal="true"
       aria-labelledby="global-search-title"
       onMouseDown={(e) => e.stopPropagation()}
     >
-      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-gray-100 bg-gradient-to-r from-brand-navy to-brand-slate px-4 py-3">
-        <h2 id="global-search-title" className="text-sm font-bold tracking-wide text-white">
+      <div className="flex min-w-0 shrink-0 items-center justify-between gap-2 border-b border-gray-100 bg-gradient-to-r from-brand-navy to-brand-slate px-3 py-3 sm:gap-3 sm:px-4">
+        <h2
+          id="global-search-title"
+          className="min-w-0 truncate text-sm font-bold tracking-wide text-white"
+        >
           Search FinNexus Lab
         </h2>
         <button
@@ -246,19 +249,19 @@ export default function GlobalSearch({ open, onClose }: GlobalSearchProps) {
       <InstantSearch searchClient={searchClient!} indexName="finnexus_content">
         <div className="flex min-h-0 flex-1 flex-col">
           <Configure hitsPerPage={8} />
-          <div className="shrink-0 border-b border-gray-100 p-4">
+          <div className="min-w-0 shrink-0 border-b border-gray-100 p-3 sm:p-4">
             <SearchBox
               placeholder="Search reports, insights, topics…"
               autoFocus={desktopAutofocus}
               classNames={{
-                form: 'relative flex items-center',
+                form: 'relative flex min-w-0 items-center',
                 input:
-                  'w-full rounded-xl border-2 border-gray-200 py-3.5 pl-4 pr-24 text-base text-brand-navy placeholder:text-gray-400 focus:border-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal/30',
+                  'box-border w-full min-w-0 max-w-full rounded-xl border-2 border-gray-200 py-3 pl-3 pr-[4.5rem] text-base text-brand-navy placeholder:text-gray-400 focus:border-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal/30 sm:pl-4 sm:pr-24',
                 submit:
-                  'absolute right-12 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-lg p-2 text-brand-teal hover:bg-teal-50',
+                  'absolute right-10 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-lg p-1.5 text-brand-teal hover:bg-teal-50 sm:right-12 sm:p-2',
                 submitIcon: '',
                 reset:
-                  'absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-lg p-2 text-gray-500 hover:bg-gray-100',
+                  'absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 sm:right-3 sm:p-2',
                 resetIcon: '',
                 loadingIndicator: 'hidden',
                 root: 'w-full',
@@ -275,7 +278,7 @@ export default function GlobalSearch({ open, onClose }: GlobalSearchProps) {
             />
           </div>
 
-          <div className="min-h-[200px] flex-1 overflow-y-auto overscroll-y-contain">
+          <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain">
             <Hits
               hitComponent={({ hit }) => <CompactHit hit={hit as AlgoliaHit} onPick={onClose} />}
               classNames={{
@@ -290,14 +293,14 @@ export default function GlobalSearch({ open, onClose }: GlobalSearchProps) {
             />
           </div>
 
-          <div className="shrink-0 border-t border-gray-100 bg-gray-50 p-4">
+          <div className="min-w-0 shrink-0 border-t border-gray-100 bg-gray-50 p-3 sm:p-4">
             <Link
               href="/research"
               onClick={onClose}
-              className="focus-ring flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-brand-navy text-sm font-semibold text-white transition-colors hover:bg-brand-teal"
+              className="focus-ring flex min-h-[48px] w-full min-w-0 items-center justify-center gap-2 rounded-xl bg-brand-navy px-3 text-center text-sm font-semibold leading-snug text-white transition-colors hover:bg-brand-teal"
             >
-              Open full research search
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <span className="min-w-0 flex-1 text-pretty sm:flex-none">Open full research search</span>
+              <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
@@ -309,16 +312,22 @@ export default function GlobalSearch({ open, onClose }: GlobalSearchProps) {
 
   return (
     <div
-      className="fixed left-0 right-0 z-[60] flex flex-col bg-black/50 backdrop-blur-[1px]"
+      className="fixed inset-x-0 z-[60] flex max-h-[100dvh] min-h-0 flex-col overflow-x-hidden bg-black/50 backdrop-blur-[1px]"
       style={{
         top: overlayTop,
         height: overlayHeight > 0 ? overlayHeight : '100dvh',
+        // Prevent horizontal bleed on notched devices / browser chrome
+        paddingLeft: 'env(safe-area-inset-left)',
+        paddingRight: 'env(safe-area-inset-right)',
       }}
       role="presentation"
     >
       <div
-        className="flex min-h-0 flex-1 flex-col justify-start overflow-y-auto px-0 py-3 sm:justify-center sm:px-4 sm:py-6"
-        style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
+        className="box-border flex min-h-0 min-w-0 flex-1 flex-col justify-start overflow-y-auto overflow-x-hidden px-3 py-2 sm:justify-center sm:px-4 sm:py-6"
+        style={{
+          paddingTop: 'max(0.5rem, env(safe-area-inset-top))',
+          paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))',
+        }}
         onMouseDown={backdropClick}
       >
         {!searchClient ? fallbackContent : searchContent}
