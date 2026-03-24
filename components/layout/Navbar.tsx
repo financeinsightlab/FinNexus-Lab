@@ -118,9 +118,6 @@ export default function Navbar() {
   /** Transparent “hero” bar: only on home before scroll — logo uses light treatment */
   const isHeroTransparent = isHome && !isSolid;
 
-  const logoTextClass = isSolid ? 'text-brand-navy' : isHome ? 'text-white' : 'text-brand-navy';
-  const labTextClass = isSolid ? 'text-brand-teal' : isHome ? 'text-brand-gold' : 'text-brand-teal';
-
   const headerClasses = [
     'fixed top-0 inset-x-0 z-50 transition-all duration-300',
     isSolid
@@ -148,8 +145,8 @@ export default function Navbar() {
     : 'hidden md:inline-flex shrink-0 items-center justify-center gap-2 h-10 w-[118px] rounded-full text-sm font-semibold text-brand-navy bg-white border border-gray-200 shadow-sm hover:border-brand-teal hover:text-brand-teal dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600 dark:hover:border-brand-teal transition-colors duration-150 focus-ring';
 
   const searchBtnMobileClass = isHeroTransparent
-    ? 'min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full text-white bg-white/15 border border-white/25 backdrop-blur-md hover:bg-white/25 active:scale-95 transition-all focus-ring'
-    : 'min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full text-white bg-brand-navy shadow-md hover:bg-brand-teal active:scale-95 transition-all focus-ring';
+    ? 'min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full text-white bg-white/15 border border-white/25 backdrop-blur-md hover:bg-white/25 transition-colors duration-150 focus-ring'
+    : 'min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full text-white bg-brand-navy shadow-md hover:bg-brand-teal transition-colors duration-150 focus-ring';
 
   return (
     <>
@@ -157,23 +154,31 @@ export default function Navbar() {
         <nav className="wrap flex items-center justify-between gap-2 h-16 md:h-[4.25rem]">
           <Link
             href="/"
-            className={`group flex shrink-0 items-center gap-1 font-bold text-base sm:text-lg md:text-xl rounded-xl px-2 sm:px-2.5 py-1.5 -ml-1 sm:-ml-2 transition-all focus-ring ${
-              isHeroTransparent
-                ? 'bg-black/40 backdrop-blur-md shadow-md ring-1 ring-white/25 hover:bg-black/50 hover:ring-white/35'
-                : 'hover:bg-gray-100/90 dark:hover:bg-gray-800/80'
-            }`}
+            className="group relative flex shrink-0 items-baseline gap-1 sm:gap-1.5 -ml-0.5 py-1 pr-1 focus-ring rounded-md outline-offset-4"
             aria-label="FinNexus Lab home"
           >
             <span
-              className={`${logoTextClass} ${isHeroTransparent ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]' : ''}`}
+              className={`font-extrabold tracking-tight text-base sm:text-lg md:text-xl transition-colors duration-200 ${
+                isHeroTransparent
+                  ? 'text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.45)]'
+                  : 'text-brand-navy group-hover:text-brand-teal'
+              }`}
             >
               FinNexus
             </span>
             <span
-              className={`${labTextClass} ${isHeroTransparent ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]' : ''}`}
+              className={`font-semibold tracking-tight text-base sm:text-lg md:text-xl transition-colors duration-200 ${
+                isHeroTransparent
+                  ? 'text-[#E8C96A] [text-shadow:0_2px_10px_rgba(0,0,0,0.4)]'
+                  : 'text-brand-teal group-hover:text-brand-gold'
+              }`}
             >
               Lab
             </span>
+            <span
+              className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-brand-teal to-brand-gold transition-[width] duration-300 ease-out group-hover:w-full opacity-0 group-hover:opacity-100"
+              aria-hidden
+            />
           </Link>
 
           <div className="hidden lg:flex items-center flex-1 justify-center max-w-3xl mx-2 gap-0.5 overflow-x-auto no-scrollbar">
