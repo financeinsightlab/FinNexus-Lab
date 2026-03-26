@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 enum UserRole {
@@ -29,7 +28,7 @@ enum SubscriptionStatus {
 model User {
   id                   String              @id @default(cuid())
   name                 String?
-  email                String              @unique
+  email                String?             @unique
   emailVerified        DateTime?
   image                String?
   password             String?
