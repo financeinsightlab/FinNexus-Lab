@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import GlobalSearch from '@/components/layout/GlobalSearch';
+import { useSession, signOut } from "next-auth/react";
 
 const navLinks = [
   { label: 'Research', href: '/research' },
@@ -15,6 +16,8 @@ const navLinks = [
   { label: 'Pricing', href: '/pricing' },
   { label: 'Enterprise', href: '/enterprise' },
   { label: 'Tracker', href: '/tracker' },
+
+
 ];
 
 function ThemeToggle({ inverted }: { inverted?: boolean }) {
@@ -110,6 +113,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSolid, setIsSolid] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const handleScroll = () => setIsSolid(window.scrollY > 20);
@@ -241,23 +245,50 @@ export default function Navbar() {
             </button>
 
             <div className="hidden md:flex items-center gap-2">
-              <Link
-                href="/resume"
-                className={`text-sm font-medium transition-colors min-h-[44px] inline-flex items-center px-2 rounded-lg focus-ring ${
-                  isHeroTransparent
-                    ? 'text-white/90 hover:text-white hover:bg-white/10'
-                    : 'text-brand-slate hover:text-brand-navy hover:bg-gray-50 dark:hover:bg-gray-800'
-                }`}
-              >
-                Resume
-              </Link>
+  {/* Resume */}
+  <Link
+    href="/resume"
+    className={`text-sm font-medium transition-colors min-h-[44px] inline-flex items-center px-2 rounded-lg focus-ring ${
+      isHeroTransparent
+        ? 'text-white/90 hover:text-white hover:bg-white/10'
+        : 'text-brand-slate hover:text-brand-navy hover:bg-gray-50 dark:hover:bg-gray-800'
+    }`}
+  >
+    Resume
+  </Link>
 
-              <ThemeToggle inverted={isHeroTransparent} />
+  <ThemeToggle inverted={isHeroTransparent} />
 
-              <Link href="/contact" className="btn btn-primary whitespace-nowrap min-h-[44px]">
-                Work With Me
-              </Link>
-            </div>
+  {/* 🔥 AUTH SECTION */}
+  {!session ? (
+    <Link
+      href="/auth/signin"
+      className="btn btn-primary whitespace-nowrap min-h-[44px]"
+    >
+      Login
+    </Link>
+  ) : (
+    <>
+      <Link
+        href="/dashboard"
+        className="px-4 py-2 rounded-lg border border-[#0D6E6E] text-sm"
+      >
+        Dashboard
+      </Link>
+
+      <button
+        onClick={() => signOut()}
+        className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm"
+      >
+        Logout
+      </button>
+    </>
+  )}
+
+  <Link href="/contact" className="btn btn-primary whitespace-nowrap min-h-[44px]">
+    Work With Me
+  </Link>
+</div>
 
             <div className="md:hidden flex items-center gap-0.5">
               <ThemeToggle inverted={isHeroTransparent} />
