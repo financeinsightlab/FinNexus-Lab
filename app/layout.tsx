@@ -58,20 +58,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-  <body className="min-h-screen flex flex-col bg-white">
-    <Providers>
-  <AuthProvider>
-        <Navbar />
-        <Analytics />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </AuthProvider>
-    </Providers>
-  </body>
-
-  {process.env.NEXT_PUBLIC_GA_ID && (
-    <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-  )}
-</html>
+      <body className="min-h-screen flex flex-col bg-white">
+        <Providers>
+          <AuthProvider>
+            <Navbar />
+            <Analytics />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            {process.env.NEXT_PUBLIC_GA_ID && (
+              <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+            )}
+          </AuthProvider>
+        </Providers>
+      </body>
+    </html>
   );
 }

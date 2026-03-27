@@ -52,3 +52,41 @@ export interface NavLink {
   href: string;
   external?: boolean;
 }
+
+export interface DataLabProject {
+  slug:             string
+  title:            string
+  date:             string
+  tools:            string[]
+  sector:           string
+  businessQuestion: string
+  duration:         string
+  featured:         boolean
+  content?:         string
+}
+
+export interface CaseStudy {
+  slug:           string
+  title:          string
+  date:           string
+  clientType:     string  // e.g. 'Startup', 'PE Firm', 'Platform Builder'
+  engagementType: string  // e.g. 'Market Research', 'Financial Modelling'
+  outcome:        string  // 1-2 sentence summary of result
+  featured:       boolean
+  content?:       string
+}
+
+export interface PodcastEpisode {
+  slug:         string
+  title:        string
+  date:         string
+  episodeNumber: number
+  duration:     string  // e.g. '32:14'
+  format:       'Solo Analysis' | 'Expert Interview' | 'Quarterly Tracker' | 'Research Summary'
+  guestName?:   string
+  guestRole?:   string
+  description:  string  // 2-3 sentences
+  audioUrl?:    string  // Spotify/Apple Podcasts URL or direct MP3
+  featured:     boolean
+  content?:     string  // show notes + transcript
+}

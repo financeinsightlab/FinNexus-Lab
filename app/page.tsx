@@ -67,12 +67,12 @@ export default async function HomePage() {
         <ScrollReveal>
           <SectionHeader
             label="What We Do"
-            title="Four Pillars of Financial Intelligence"
+            title="Platform Pillars of Financial Intelligence"
             align="center"
           />
         </ScrollReveal>
         <div className="wrap">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-14">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-14">
             {[
               {
                 icon: '📊',
@@ -105,6 +105,22 @@ export default async function HomePage() {
                 href: '/tools',
                 bg: 'bg-purple-50',
                 delay: 300,
+              },
+              {
+                icon: '📊',
+                title: 'Data Lab',
+                desc: 'Analytics projects, Power BI dashboards, and Python data analyses.',
+                href: '/data-lab',
+                bg: 'bg-emerald-50',
+                delay: 400,
+              },
+              {
+                icon: '📁',
+                title: 'Case Studies',
+                desc: 'Consulting-quality engagements — Challenge to Outcome narratives.',
+                href: '/case-studies',
+                bg: 'bg-rose-50',
+                delay: 500,
               },
             ].map((pillar) => (
               <ScrollReveal key={pillar.title} delay={pillar.delay}>
@@ -139,6 +155,68 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Sector Trackers */}
+      <section className="py-20 bg-white border-t border-gray-100">
+        <div className="wrap">
+          <ScrollReveal>
+            <SectionHeader
+              label="Live Intelligence"
+              title="Sector Intelligence Trackers"
+              subtitle="Quarterly-updated data across 8 Indian market sectors"
+              align="center"
+            />
+          </ScrollReveal>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mt-10">
+            {[
+              {
+                emoji: '🚀',
+                sector: 'Quick Commerce',
+                metric: 'GMV Growth: 42% YoY',
+                href: '/tracker/quick-commerce',
+              },
+              {
+                emoji: '💰',
+                sector: 'Fintech',
+                metric: 'Digital Payments: ₹12.4T',
+                href: '/tracker/fintech',
+              },
+              {
+                emoji: '⚡',
+                sector: 'EV',
+                metric: 'EV Adoption: 8.5%',
+                href: '/tracker/ev',
+              },
+              {
+                emoji: '🍔',
+                sector: 'Food Delivery',
+                metric: 'Order Volume: 18M/month',
+                href: '/tracker/food-delivery',
+              },
+            ].map((tracker) => (
+              <Link
+                key={tracker.sector}
+                href={tracker.href}
+                className="card p-5 cursor-pointer hover:shadow-lg transition-shadow"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-2xl">{tracker.emoji}</span>
+                  <h3 className="font-bold text-brand-navy">{tracker.sector}</h3>
+                </div>
+                <p className="text-sm text-brand-slate mb-3">{tracker.metric}</p>
+                <div className="inline-flex items-center gap-1 px-2 py-1 bg-amber-50 text-amber-800 text-xs rounded-full">
+                  🔒 Full data: subscribers
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link href="/tracker" className="btn-ghost text-sm">
+              View All Trackers →
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Latest Insights */}
       <section className="py-20 bg-brand-slate/5">
         <div className="wrap">
@@ -169,6 +247,45 @@ export default async function HomePage() {
               </Link>
             </div>
           </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Podcast */}
+      <section className="py-20 bg-brand-slate/5">
+        <div className="wrap">
+          <ScrollReveal>
+            <SectionHeader
+              label="FinNexus Podcast"
+              title="Market Intelligence in 30 Minutes"
+              align="center"
+            />
+          </ScrollReveal>
+          <div className="mt-10">
+            <div className="card p-8 flex flex-col md:flex-row gap-6 items-start">
+              <div className="flex-shrink-0">
+                <div className="text-5xl font-bold text-brand-teal">01</div>
+                <div className="mt-2 px-3 py-1 bg-teal-100 text-teal-800 text-xs font-medium rounded-full">
+                  Deep Dive
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-brand-navy mb-3">
+                  Episode 1: Blinkit EBITDA Breakdown
+                </h3>
+                <p className="text-brand-slate leading-relaxed mb-6">
+                  A detailed analysis of Blinkit's path to profitability, unit economics, and the broader quick‑commerce landscape in India. We break down the key drivers, competitive moats, and what it means for investors.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <Link href="/podcast/ep001-blinkit-ebitda-breakdown" className="btn-ghost text-sm">
+                    Listen & Read Notes →
+                  </Link>
+                  <Link href="/podcast" className="text-sm text-brand-teal hover:underline">
+                    All Episodes →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

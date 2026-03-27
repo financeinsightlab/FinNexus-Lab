@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import type { ResearchPost, InsightPost } from '@/types';
+import type { ResearchPost, InsightPost, DataLabProject, CaseStudy, PodcastEpisode } from '@/types';
 
 const CONTENT = path.join(process.cwd(), 'content');
 
@@ -110,4 +110,112 @@ export function getContentCounts(): { research: number; insights: number } {
     research: getAllResearch().length,
     insights: getAllInsights().length,
   };
+}
+
+function normalizeDataLabProject(data: Record<string, unknown>, slug: string, content?: string): DataLabProject {
+  return {
+    slug,
+    title: typeof data.title === 'string' ? data.title : slug,
+    date: typeof data.date === 'string' ? data.date : new Date().toISOString(),
+    tools: toStringArray(data.tools),
+    sector: typeof data.sector === 'string' ? data.sector : 'General',
+    businessQuestion: typeof data.businessQuestion === 'string' ? data.businessQuestion : '',
+    duration: typeof data.duration === 'string' ? data.duration : '',
+    featured: Boolean(data.featured),
+    content,
+  };
+}
+
+function normalizeCaseStudy(data: Record<string, unknown>, slug: string, content?: string): CaseStudy {
+  return {
+    slug,
+    title: typeof data.title === 'string' ? data.title : slug,
+    date: typeof data.date === 'string' ? data.date : new Date().toISOString(),
+    clientType: typeof data.clientType === 'string' ? data.clientType : '',
+    engagementType: typeof data.engagementType === 'string' ? data.engagementType : '',
+    outcome: typeof data.outcome === 'string' ? data.outcome : '',
+    featured: Boolean(data.featured),
+    content,
+  };
+}
+
+export function getAllDataLab(): DataLabProject[] {
+  const dataLabDir = path.join(CONTENT, 'data-lab');
+  const files = readDir(dataLabDir);
+  return files
+    .map(({ slug, filePath }) => {
+      const fileContents = fs.readFileSync(filePath, 'utf8');
+      const { data } = matter(fileContents);
+      return normalizeDataLabProject(data as Record<string, unknown>, slug);
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export async function getDataLabBySlug(slug: string): Promise<DataLabProject | null> {
+  const filePath = path.join(CONTENT, 'data-lab', `${slug}.mdx`);
+  if (!fs.existsSync(filePath)) return null;
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const { data, content } = matter(fileContents);
+  return normalizeDataLabProject(data as Record<string, unknown>, slug, content);
+}
+
+export function getFeaturedDataLab(n = 3): DataLabProject[] {
+  return getAllDataLab().filter((project) => project.featured).slice(0, n);
+}
+
+export function getAllCaseStudies(): CaseStudy[] {
+  const caseStudiesDir = path.join(CONTENT, 'case-studies');
+  const files = readDir(caseStudiesDir);
+  return files
+    .map(({ slug, filePath }) => {
+      const fileContents = fs.readFileSync(filePath, 'utf8');
+      const { data } = matter(fileContents);
+      return normalizeCaseStudy(data as Record<string, unknown>, slug);
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
+  const filePath = path.join(CONTENT, 'case-studies', `${slug}.mdx`);
+  if (!fs.existsSync(filePath)) return null;
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const { data, content } = matter(fileContents);
+  return normalizeCaseStudy(data as Record<string, unknown>, slug, content);
+}
+
+function normalizePodcastEpisode(data: Record<string, unknown>, slug: string, content?: string): PodcastEpisode {
+  return {
+    slug,
+    title: typeof data.title === 'string' ? data.title : slug,
+    date: typeof data.date === 'string' ? data.date : new Date().toISOString(),
+    episodeNumber: typeof data.episodeNumber === 'number' ? data.episodeNumber : 0,
+    duration: typeof data.duration === 'string' ? data.duration : '',
+    format: (typeof data.format === 'string' ? data.format : 'Solo Analysis') as PodcastEpisode['format'],
+    guestName: typeof data.guestName === 'string' ? data.guestName : undefined,
+    guestRole: typeof data.guestRole === 'string' ? data.guestRole : undefined,
+    description: typeof data.description === 'string' ? data.description : '',
+    audioUrl: typeof data.audioUrl === 'string' ? data.audioUrl : undefined,
+    featured: Boolean(data.featured),
+    content,
+  };
+}
+
+export function getAllPodcastEpisodes(): PodcastEpisode[] {
+  const podcastDir = path.join(CONTENT, 'podcast');
+  const files = readDir(podcastDir);
+  return files
+    .map(({ slug, filePath }) => {
+      const fileContents = fs.readFileSync(filePath, 'utf8');
+      const { data } = matter(fileContents);
+      return normalizePodcastEpisode(data as Record<string, unknown>, slug);
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export async function getPodcastEpisodeBySlug(slug: string): Promise<PodcastEpisode | null> {
+  const filePath = path.join(CONTENT, 'podcast', `${slug}.mdx`);
+  if (!fs.existsSync(filePath)) return null;
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const { data, content } = matter(fileContents);
+  return normalizePodcastEpisode(data as Record<string, unknown>, slug, content);
 }

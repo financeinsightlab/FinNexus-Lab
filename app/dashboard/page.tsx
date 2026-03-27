@@ -155,10 +155,18 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="mt-6">
-            <Link href="/dashboard" className="btn btn-outline w-full">
+          <div className="mt-6 space-y-3">
+            <Link href="/dashboard/edit" className="btn btn-outline w-full">
               Edit Profile
             </Link>
+            <form action="/api/auth/signout" method="POST">
+              <button
+                type="submit"
+                className="btn btn-outline w-full border-red-300 text-red-600 hover:bg-red-50"
+              >
+                Logout
+              </button>
+            </form>
           </div>
         </div>
 
