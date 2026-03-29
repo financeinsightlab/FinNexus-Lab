@@ -21,6 +21,7 @@ export type PostFormData = {
   ogImage?: string | null
   ogTitle?: string | null
   tags?: string[]
+  publishedAt?: Date | null
 }
 
 export async function createPost(formData: PostFormData) {
