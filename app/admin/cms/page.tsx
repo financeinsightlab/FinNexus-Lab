@@ -1,22 +1,26 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
-import { ArticleType } from "@prisma/client"
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  Edit2, 
-  Trash2, 
+import { ArticleType, Post } from "@prisma/client"
+import {
+  Plus,
+  Search,
+  Filter,
+  Edit2,
   Eye,
-  CheckCircle2,
-  Clock,
   ExternalLink,
   FileText,
   ChevronDown
 } from "lucide-react"
 import Link from "next/link"
 import React from "react"
+import ActionButtons from "./ActionButtons"
+
+type PostWithAuthor = Post & {
+  author: {
+    name: string | null
+  }
+}
 
 export default async function CMSDashboard({
   searchParams,
@@ -36,27 +40,25 @@ export default async function CMSDashboard({
   const status = searchParams.status
 
   // Fetch posts with error handling
-  let posts: any[] = []
+  let posts: PostWithAuthor[] = []
   try {
-     const postModel = (prisma as any).post;
-     if (postModel) {
-       posts = await postModel.findMany({
-        where: {
-          AND: [
-            type ? { type } : {},
-            status === "published" ? { published: true } : status === "draft" ? { published: false } : {},
-            searchParams.search ? {
-              OR: [
-                { title: { contains: searchParams.search, mode: "insensitive" } },
-                { excerpt: { contains: searchParams.search, mode: "insensitive" } },
-              ]
-            } : {}
-          ]
-        },
-        orderBy: { createdAt: "desc" },
-        include: { author: { select: { name: true } } }
-      })
-     }
+     const postsData = await prisma.post.findMany({
+      where: {
+        AND: [
+          type ? { type } : {},
+          status === "published" ? { published: true } : status === "draft" ? { published: false } : {},
+          searchParams.search ? {
+            OR: [
+              { title: { contains: searchParams.search, mode: "insensitive" } },
+              { excerpt: { contains: searchParams.search, mode: "insensitive" } },
+            ]
+          } : {}
+        ]
+      },
+      orderBy: { createdAt: "desc" },
+      include: { author: { select: { name: true } } }
+    })
+    posts = postsData
   } catch (e) {
     console.error("Prisma fetch failed:", e)
   }
@@ -98,7 +100,11 @@ export default async function CMSDashboard({
           />
         </div>
         <div className="relative">
-          <select className="appearance-none w-full bg-white/5 border border-white/10 rounded-2xl text-sm px-5 py-3 text-slate-300 outline-none focus:border-[#0D6E6E]/50 focus:bg-white/10 transition-all cursor-pointer">
+          <select
+            className="appearance-none w-full bg-white/5 border border-white/10 rounded-2xl text-sm px-5 py-3 text-slate-300 outline-none focus:border-[#0D6E6E]/50 focus:bg-white/10 transition-all cursor-pointer"
+            aria-label="Filter by category"
+            title="Filter by category"
+          >
             {categories.map(cat => (
               <option key={cat.value} value={cat.value} className="bg-[#1A1F2E]">{cat.label}</option>
             ))}
@@ -106,7 +112,11 @@ export default async function CMSDashboard({
           <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
         </div>
         <div className="relative">
-          <select className="appearance-none w-full bg-white/5 border border-white/10 rounded-2xl text-sm px-5 py-3 text-slate-300 outline-none focus:border-[#0D6E6E]/50 focus:bg-white/10 transition-all cursor-pointer">
+          <select
+            className="appearance-none w-full bg-white/5 border border-white/10 rounded-2xl text-sm px-5 py-3 text-slate-300 outline-none focus:border-[#0D6E6E]/50 focus:bg-white/10 transition-all cursor-pointer"
+            aria-label="Filter by status"
+            title="Filter by status"
+          >
             <option value="" className="bg-[#1A1F2E]">All Status</option>
             <option value="published" className="bg-[#1A1F2E]">Published</option>
             <option value="draft" className="bg-[#1A1F2E]">Drafts</option>
@@ -169,19 +179,14 @@ export default async function CMSDashboard({
                         >
                           <Eye className="w-4 h-4" />
                         </Link>
-                        <Link 
+                        <Link
                           href={`/admin/cms/edit/${post.id}`}
                           className="p-2 text-slate-500 hover:text-[#0D6E6E] bg-white/5 hover:bg-[#0D6E6E]/10 rounded-xl transition-all"
                           title="Edit Document"
                         >
                           <Edit2 className="w-4 h-4" />
                         </Link>
-                        <button 
-                          className="p-2 text-slate-500 hover:text-red-400 bg-white/5 hover:bg-red-400/10 rounded-xl transition-all"
-                          title="Remove Archive"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <ActionButtons post={post} />
                       </div>
                     </td>
                   </tr>

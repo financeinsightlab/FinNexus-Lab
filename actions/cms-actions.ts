@@ -77,3 +77,41 @@ export async function deletePost(id: string) {
   revalidatePath(`/${post.type.toLowerCase()}`)
   return post
 }
+
+export async function togglePublishPost(id: string) {
+  const session = await auth()
+  if (!session?.user || session.user.role !== "ADMIN") {
+    throw new Error("Unauthorized")
+  }
+
+  const post = await prisma.post.findUnique({
+    where: { id },
+  })
+
+  if (!post) {
+    throw new Error("Post not found")
+  }
+
+  const updatedPost = await prisma.post.update({
+    where: { id },
+    data: {
+      published: !post.published,
+      publishedAt: !post.published ? new Date() : null,
+    },
+  })
+
+  revalidatePath("/admin/cms")
+  revalidatePath(`/${post.type.toLowerCase()}`)
+  revalidatePath(`/${post.type.toLowerCase()}/${post.slug}`)
+  return updatedPost
+}
+
+export async function togglePublishPostForm(formData: FormData) {
+  const id = formData.get("id") as string
+  await togglePublishPost(id)
+}
+
+export async function deletePostForm(formData: FormData) {
+  const id = formData.get("id") as string
+  await deletePost(id)
+}
