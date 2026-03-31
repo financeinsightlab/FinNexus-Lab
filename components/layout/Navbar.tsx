@@ -102,6 +102,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen]     = useState(false);
+  const [userOpen, setUserOpen]     = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { data: session }           = useSession();
 
@@ -116,6 +117,16 @@ export default function Navbar() {
     document.addEventListener('mousedown', close);
     return () => document.removeEventListener('mousedown', close);
   }, [moreOpen]);
+
+  /* Close user-dropdown on outside click */
+  useEffect(() => {
+    if (!userOpen) return;
+    const close = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement).closest('[data-user-dropdown]')) setUserOpen(false);
+    };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [userOpen]);
 
   /* Lock body scroll when mobile menu is open */
   useEffect(() => {
@@ -198,17 +209,6 @@ export default function Navbar() {
                       </Link>
                     ))}
                   </div>
-                  {session && (
-                    <div className="border-t border-gray-800 px-2 py-1.5 shrink-0">
-                      <button
-                        onClick={() => { setMoreOpen(false); signOut(); }}
-                        className="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
-                      >
-                        <span>🚪</span>
-                        <span>Sign Out</span>
-                      </button>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
@@ -229,8 +229,8 @@ export default function Navbar() {
             {/* Theme */}
             <ThemeToggle />
 
-            {/* Auth — desktop */}
-            <div className="hidden lg:flex items-center gap-2 ml-1">
+            {/* User dropdown — desktop */}
+            <div className="hidden lg:flex items-center ml-1" data-user-dropdown>
               {!session ? (
                 <Link
                   href="/auth/signin"
@@ -239,28 +239,59 @@ export default function Navbar() {
                   Sign In
                 </Link>
               ) : (
-                <>
-                  <Link
-                    href="/dashboard"
-                    className="px-4 py-2 rounded-xl border border-teal-500/50 text-teal-400 text-sm font-medium hover:bg-teal-500/10 hover:border-teal-500 transition-all"
-                  >
-                    Dashboard
-                  </Link>
-                  {(session.user as { role?: string })?.role === 'ADMIN' && (
-                    <Link
-                      href="/admin/users"
-                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-sm font-medium shadow hover:opacity-90 transition"
-                    >
-                      Admin
-                    </Link>
-                  )}
+                <div className="relative">
                   <button
-                    onClick={() => signOut()}
-                    className="px-4 py-2 rounded-xl bg-red-500/15 text-red-400 border border-red-500/20 text-sm font-medium hover:bg-red-500/25 transition"
+                    onClick={() => setUserOpen(v => !v)}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500/10 to-emerald-500/10 text-teal-400 border border-teal-500/30 text-sm font-medium hover:bg-teal-500/20 hover:border-teal-500 transition-all"
+                    aria-expanded={userOpen}
+                    aria-haspopup="true"
                   >
-                    Logout
+                    <span className="text-base">👤</span>
+                    <span>Account</span>
+                    <ChevronDown open={userOpen} />
                   </button>
-                </>
+
+                  {userOpen && (
+                    <div className="absolute top-[calc(100%+8px)] right-0 w-56 bg-gray-900/98 backdrop-blur-xl border border-gray-800 rounded-2xl shadow-2xl shadow-black/60 z-50 anim-fade flex flex-col" style={{ maxHeight: 'calc(100vh - 80px)' }}>
+                      <div className="px-4 pt-3 pb-1 shrink-0">
+                        <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-widest">Account</p>
+                        <div className="mt-1 px-1 py-1.5 bg-white/4 rounded-lg border border-white/6">
+                          <p className="text-[11px] text-gray-500">Signed in as</p>
+                          <p className="text-sm font-medium text-white truncate mt-0.5">{session.user?.email}</p>
+                        </div>
+                      </div>
+                      <div className="px-2 pb-1 overflow-y-auto no-scrollbar">
+                        <Link
+                          href="/dashboard"
+                          onClick={() => setUserOpen(false)}
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors group/item text-gray-300 hover:bg-white/5 hover:text-white"
+                        >
+                          <span className="text-sm opacity-70">📊</span>
+                          <span className="flex-1">Dashboard</span>
+                          <span className="text-gray-600 group-hover/item:text-teal-500 transition-colors text-xs">→</span>
+                        </Link>
+                        {(session.user as { role?: string })?.role === 'ADMIN' && (
+                          <Link
+                            href="/admin/users"
+                            onClick={() => setUserOpen(false)}
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors group/item text-gray-300 hover:bg-white/5 hover:text-white"
+                          >
+                            <span className="text-sm opacity-70">⚙️</span>
+                            <span className="flex-1">Admin Panel</span>
+                            <span className="text-gray-600 group-hover/item:text-teal-500 transition-colors text-xs">→</span>
+                          </Link>
+                        )}
+                        <button
+                          onClick={() => { setUserOpen(false); signOut(); }}
+                          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors mt-1"
+                        >
+                          <span>🚪</span>
+                          <span>Sign Out</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
 
