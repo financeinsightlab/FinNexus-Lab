@@ -7,20 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  MEMBER
-  VIEWER
-  ADMIN
-}
-
-enum SubscriptionStatus {
-  ACTIVE
-  INACTIVE
-  PAST_DUE
-  CANCELED
-  TRIALING
-}
-
 model User {
   id                 String             @id @default(cuid())
   name               String?
@@ -35,11 +21,10 @@ model User {
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
   purchasedServices  String[]
-
-  accounts      Account[]
-  sessions      Session[]
-  savedArticles SavedArticle[]
-  posts         Post[]
+  accounts           Account[]
+  posts              Post[]
+  savedArticles      SavedArticle[]
+  sessions           Session[]
 }
 
 model Account {
@@ -48,15 +33,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -66,8 +50,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -84,10 +67,141 @@ model SavedArticle {
   slug    String
   type    String
   savedAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, slug, type])
+}
+
+model Post {
+  id              String      @id @default(cuid())
+  title           String
+  slug            String      @unique
+  excerpt         String?
+  content         String
+  type            ArticleType @default(RESEARCH)
+  published       Boolean     @default(false)
+  featuredImage   String?
+  authorId        String
+  seoTitle        String?
+  metaDescription String?
+  focusKeywords   String?
+  ogImage         String?
+  ogTitle         String?
+  tags            String[]    @default([])
+  viewCount       Int         @default(0)
+  publishedAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  author          User        @relation(fields: [authorId], references: [id])
+
+  @@index([type])
+  @@index([published])
+  @@index([slug])
+}
+
+model PageView {
+  id         String   @id @default(cuid())
+  path       String
+  userId     String?
+  sessionId  String
+  durationMs Int      @default(0)
+  referrer   String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([path])
+  @@index([userId])
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+model LoginEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  provider  String   @default("credentials")
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model FeaturedContent {
+  id        String   @id
+  section   String
+  contentId String
+  order     Int
+  updatedAt DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([section, contentId])
+  @@index([section, order])
+}
+
+model HomePageAuditLog {
+  id        String   @id
+  action    String
+  section   String?
+  itemId    String?
+  userId    String
+  oldValue  Json?
+  newValue  Json?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+  @@index([section])
+  @@index([userId])
+}
+
+model HomePageConfig {
+  id        String          @id
+  section   HomePageSection @unique
+  config    Json
+  enabled   Boolean         @default(true)
+  order     Int
+  updatedAt DateTime
+  createdAt DateTime        @default(now())
+
+  @@index([enabled])
+  @@index([order])
+  @@index([section])
+}
+
+model HomePageItem {
+  id          String   @id
+  section     String
+  title       String
+  subtitle    String?
+  description String?
+  icon        String?
+  link        String?
+  color       String?
+  order       Int
+  enabled     Boolean  @default(true)
+  updatedAt   DateTime
+  createdAt   DateTime @default(now())
+
+  @@unique([section, order])
+  @@index([section, enabled])
+  @@index([section])
+  @@index([section, order])
+}
+
+enum UserRole {
+  MEMBER
+  VIEWER
+  ADMIN
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  PAST_DUE
+  CANCELED
+  TRIALING
 }
 
 enum ArticleType {
@@ -98,33 +212,11 @@ enum ArticleType {
   OTHER
 }
 
-model Post {
-  id            String      @id @default(cuid())
-  title         String
-  slug          String      @unique
-  excerpt       String?
-  content       String      @db.Text
-  type          ArticleType @default(RESEARCH)
-  published     Boolean     @default(false)
-  featuredImage String?
-  authorId      String
-  
-  // CMS Elite Meta
-  seoTitle        String?
-  metaDescription String?
-  focusKeywords   String?
-  ogImage         String?
-  ogTitle         String?
-  tags            String[]    @default([])
-  viewCount       Int         @default(0)
-  publishedAt     DateTime?
-
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-
-  author User @relation(fields: [authorId], references: [id])
-
-  @@index([type])
-  @@index([published])
-  @@index([slug])
+enum HomePageSection {
+  RESEARCH
+  INSIGHTS
+  PILLARS
+  TRACKERS
+  PODCAST
+  HERO_STATS
 }

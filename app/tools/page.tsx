@@ -115,6 +115,18 @@ const TOOLS: Tool[] = [
     slug: 'ai-agent-roi-calculator'
   },
   {
+    id: 11,
+    icon: '🧠',
+    title: 'Autonomous Workforce Restructuring Simulator',
+    category: 'AI Strategy',
+    tool: 'Web App',
+    difficulty: 'Advanced',
+    gated: true,
+    desc: 'Next-generation financial model simulating the EBITDA and valuation impact of replacing human departments with autonomous agent swarms.',
+    includes: ['Swarm Arbitrage calculation', 'Valuation re-rating engine', 'Restructuring cost logic', 'Live margin mapping'],
+    slug: 'autonomous-workforce'
+  },
+  {
     id: 9,
     icon: '🪙',
     title: 'Web3 Tokenomics & Vesting Model',

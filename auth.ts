@@ -94,6 +94,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   events: {
     async signIn(message) {
       console.log("SIGN IN EVENT:", message)
+      // Record every login event for analytics
+      try {
+        if (message.user?.id) {
+          await (prisma as any).loginEvent.create({
+            data: {
+              userId: message.user.id,
+              provider: message.account?.provider ?? "credentials",
+            },
+          })
+        }
+      } catch (e) {
+        console.error("Failed to record login event:", e)
+      }
     },
   },
 })

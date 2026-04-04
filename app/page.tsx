@@ -12,10 +12,63 @@ import InsightGrid from '@/components/insights/InsightGrid';
 import NewsletterForm from '@/components/NewsletterForm';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { getFeaturedResearch, getFeaturedInsights } from '@/lib/content';
+import { prisma } from '@/lib/prisma';
+import type { ResearchPost, InsightPost } from '@/types';
+
+async function getHomePagePosts() {
+  // Try to get DB-driven featured selections first
+  const [dbResearch, dbInsights, dbHeroStats, dbTrackers] = await Promise.all([
+    prisma.featuredContent.findMany({ where: { section: 'RESEARCH' }, orderBy: { order: 'asc' } }),
+    prisma.featuredContent.findMany({ where: { section: 'INSIGHTS' }, orderBy: { order: 'asc' } }),
+    prisma.homePageItem.findMany({ where: { section: 'HERO_STATS', enabled: true }, orderBy: { order: 'asc' } }),
+    prisma.homePageItem.findMany({ where: { section: 'TRACKERS', enabled: true }, orderBy: { order: 'asc' } }),
+  ]);
+
+  let research: ResearchPost[];
+  let insights: InsightPost[];
+
+  if (dbResearch.length > 0) {
+    // Use DB selections: match IDs to posts in DB, then supplement with MDX
+    const dbPosts = await prisma.post.findMany({
+      where: { id: { in: dbResearch.map(r => r.contentId) } },
+      select: { id: true, title: true, slug: true, excerpt: true, type: true, publishedAt: true, tags: true, viewCount: true },
+    });
+    const idToPost = Object.fromEntries(dbPosts.map(p => [p.id, p]));
+    research = dbResearch
+      .map(r => idToPost[r.contentId])
+      .filter(Boolean)
+      .map(p => ({
+        slug: p.slug, title: p.title, date: p.publishedAt?.toISOString() ?? new Date().toISOString(),
+        sector: 'General', tags: p.tags, summary: p.excerpt ?? '', pageCount: 0,
+        author: 'FinNexus Lab', featured: true,
+      }));
+  } else {
+    research = getFeaturedResearch(3);
+  }
+
+  if (dbInsights.length > 0) {
+    const dbPosts = await prisma.post.findMany({
+      where: { id: { in: dbInsights.map(r => r.contentId) } },
+      select: { id: true, title: true, slug: true, excerpt: true, type: true, publishedAt: true },
+    });
+    const idToPost = Object.fromEntries(dbPosts.map(p => [p.id, p]));
+    insights = dbInsights
+      .map(r => idToPost[r.contentId])
+      .filter(Boolean)
+      .map(p => ({
+        slug: p.slug, title: p.title, date: p.publishedAt?.toISOString() ?? new Date().toISOString(),
+        category: 'Sector Analysis' as InsightPost['category'],
+        readingTime: 5, thesis: p.excerpt ?? '', author: 'FinNexus Lab', featured: true,
+      }));
+  } else {
+    insights = getFeaturedInsights(3);
+  }
+
+  return { research, insights, heroStats: dbHeroStats, trackers: dbTrackers };
+}
 
 export default async function HomePage() {
-  const research = getFeaturedResearch(3);
-  const insights = getFeaturedInsights(3);
+  const { research, insights, heroStats, trackers } = await getHomePagePosts();
 
   return (
     <>

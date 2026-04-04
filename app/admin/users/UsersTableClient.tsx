@@ -17,6 +17,8 @@ type UserData = {
   updatedAt: Date;
   emailVerified: Date | null;
   stripeCustomerId: string | null;
+  isOnline: boolean;
+  lastLogin: Date | null;
   _count: {
     accounts: number;
     sessions: number;
@@ -101,14 +103,24 @@ export default function UsersTableClient({ initialUsers }: { initialUsers: UserD
               {/* Identity Column */}
               <td className="px-8 py-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-2xl bg-[#0D6E6E]/10 border border-[#0D6E6E]/20 flex items-center justify-center text-[#0D6E6E] group-hover:bg-[#0D6E6E] group-hover:text-white transition-all shadow-inner">
-                    <UserIcon className="w-5 h-5" />
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-2xl bg-[#0D6E6E]/10 border border-[#0D6E6E]/20 flex items-center justify-center text-[#0D6E6E] group-hover:bg-[#0D6E6E] group-hover:text-white transition-all shadow-inner">
+                      <UserIcon className="w-5 h-5" />
+                    </div>
+                    {user.isOnline && (
+                      <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#1A1F2E] shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
+                    )}
                   </div>
                   <div>
                     <p className="text-sm font-bold text-white group-hover:text-[#0D6E6E] transition-colors">{user.name || "Anonymous User"}</p>
                     <p className="text-[11px] text-slate-500 font-medium mt-0.5">{user.email}</p>
                     <div className="mt-1.5 flex items-center gap-2">
-                       <span className="text-[9px] font-bold uppercase tracking-widest text-slate-600 bg-black/30 px-2 py-0.5 rounded-md border border-white/5">UID: {user.id.slice(0, 8)}</span>
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-slate-600 bg-black/30 px-2 py-0.5 rounded-md border border-white/5">UID: {user.id.slice(0, 8)}</span>
+                      {user.isOnline ? (
+                        <span className="text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">● ONLINE</span>
+                      ) : user.lastLogin ? (
+                        <span className="text-[9px] text-slate-600">Last seen {new Date(user.lastLogin).toLocaleDateString()}</span>
+                      ) : null}
                     </div>
                   </div>
                 </div>

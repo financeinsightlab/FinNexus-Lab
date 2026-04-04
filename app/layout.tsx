@@ -6,6 +6,7 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import Analytics from '@/components/ui/Analytics';
 import Providers from '@/components/ThemeProvider'
 import AuthProvider from "@/components/providers/AuthProvider";
+import PageTracker from "@/components/analytics/PageTracker";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -86,6 +87,7 @@ export default function RootLayout({
             <Suspense fallback={null}>
               <Analytics />
             </Suspense>
+            <PageTracker />
             <main className="flex-1">{children}</main>
             <Footer />
             {process.env.NEXT_PUBLIC_GA_ID && (
