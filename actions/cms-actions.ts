@@ -56,6 +56,11 @@ export async function createPost(formData: PostFormData) {
   const post = await prisma.post.create({
     data: {
       ...formData,
+      difficulty: formData.difficulty || "INTERMEDIATE",
+      contentStatus: formData.contentStatus || "DRAFT",
+      estimatedReadingTime: formData.estimatedReadingTime || 5,
+      tags: formData.tags || [],
+      targetAudience: formData.targetAudience || [],
       authorId: validAuthorId,
       publishedAt: formData.published ? new Date() : null,
     },
@@ -83,6 +88,11 @@ export async function updatePost(id: string, formData: PostFormData) {
     where: { id },
     data: {
       ...formData,
+      difficulty: formData.difficulty || "INTERMEDIATE",
+      contentStatus: formData.contentStatus || "DRAFT",
+      estimatedReadingTime: formData.estimatedReadingTime || 5,
+      tags: formData.tags || [],
+      targetAudience: formData.targetAudience || [],
       publishedAt: formData.published ? (formData.publishedAt || new Date()) : null,
     },
   })

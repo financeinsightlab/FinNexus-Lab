@@ -1,0 +1,7 @@
+actions/community-predictions.ts(6,10): error TS2305: Module '"@/lib/utils"' has no exported member 'checkRole'.
+app/predictions/PredictionsClient.tsx(31,108): error TS2339: Property 'role' does not exist on type '{ email: string | null; id: string; name: string | null; }'.
+app/predictions/PredictionsClient.tsx(32,110): error TS2339: Property 'role' does not exist on type '{ email: string | null; id: string; name: string | null; }'.
+app/predictions/PredictionsClient.tsx(134,61): error TS2339: Property 'role' does not exist on type '{ email: string | null; id: string; name: string | null; }'.
+app/predictions/PredictionsClient.tsx(134,89): error TS2339: Property 'customBadge' does not exist on type '{ email: string | null; id: string; name: string | null; }'.
+app/predictions/PredictionsClient.tsx(208,58): error TS2339: Property 'role' does not exist on type '{ email: string | null; id: string; name: string | null; }'.
+app/predictions/PredictionsClient.tsx(208,86): error TS2339: Property 'customBadge' does not exist on type '{ email: string | null; id: string; name: string | null; }'.

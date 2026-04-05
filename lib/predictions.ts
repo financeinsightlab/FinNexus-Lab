@@ -12,7 +12,7 @@ export async function getAllPredictions() {
     orderBy: { resolveDate: 'asc' },
     include: {
       author: {
-        select: { id: true, name: true, email: true },
+        select: { id: true, name: true, email: true, role: true, customBadge: true },
       },
     },
   });
@@ -23,7 +23,7 @@ export async function getPredictionsByAuthor(authorId: string) {
     where: { authorId },
     orderBy: { resolveDate: 'desc' },
     include: {
-      author: { select: { id: true, name: true, email: true } },
+      author: { select: { id: true, name: true, email: true, role: true, customBadge: true } },
     },
   });
 }
@@ -33,7 +33,7 @@ export async function getOpenPredictions() {
     where: { status: 'PENDING' },
     orderBy: { resolveDate: 'asc' },
     include: {
-      author: { select: { id: true, name: true, email: true } },
+      author: { select: { id: true, name: true, email: true, role: true, customBadge: true } },
     },
   });
 }
