@@ -30,7 +30,7 @@ export default async function PredictionsBoardPage() {
   const isAdmin = session?.user?.role === "ADMIN";
 
   return (
-    <div className="min-h-screen bg-[#0B0D13]">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0B0D13]">
       <PredictionsClient
         predictions={predictions}
         sectors={sectors}

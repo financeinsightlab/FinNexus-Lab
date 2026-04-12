@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
+import HeroBackground from '@/components/ui/HeroBackground';
 import ContactForm from './ContactForm';
 
 export const metadata: Metadata = {
@@ -12,8 +13,9 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-brand-navy py-16">
-        <div className="wrap">
+      <header className="relative overflow-hidden bg-brand-navy py-16">
+        <HeroBackground />
+        <div className="wrap relative z-10">
           <p className="section-label text-teal-300 mb-5">Get in Touch</p>
           <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-6">
             Start a Conversation

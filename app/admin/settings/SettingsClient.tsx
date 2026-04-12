@@ -6,6 +6,7 @@ import {
   Check, Loader2, GripVertical, Plus, Trash2,
   Eye, EyeOff, Save, ChevronUp, ChevronDown, RefreshCw,
 } from "lucide-react"
+import HeroBackground from "@/components/ui/HeroBackground"
 
 // ─── Types ───────────────────────────────────────────────────────────────
 type Post = {
@@ -515,12 +516,15 @@ export default function SettingsClient(props: Props) {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <span className="section-label">Platform Control</span>
-        <h1 className="text-4xl font-extrabold text-white mt-2 leading-tight">Settings</h1>
-        <p className="text-slate-400 mt-2 max-w-xl">
-          Control your homepage content, featured posts, stats, and section visibility.
-        </p>
+      <div className="relative overflow-hidden bg-brand-navy rounded-3xl p-8 md:p-10 shadow-xl border border-white/5">
+        <HeroBackground />
+        <div className="relative z-10">
+          <span className="section-label text-teal-400">Platform Control</span>
+          <h1 className="text-4xl font-extrabold text-white mt-2 leading-tight">Settings</h1>
+          <p className="text-slate-300 mt-2 max-w-xl">
+            Control your homepage content, featured posts, stats, and section visibility.
+          </p>
+        </div>
       </div>
 
       {/* Tabs */}

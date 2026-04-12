@@ -61,11 +61,11 @@ export default function PageTracker() {
     };
 
     window.addEventListener("beforeunload", handleUnload);
-    // Also send a heartbeat every 30s to keep duration live
+    // Send a heartbeat every 60s (reduced from 30s) to keep duration live while reducing server load
     const interval = setInterval(() => {
       const duration = Date.now() - startTime.current;
       sendView(pathname, duration);
-    }, 30000);
+    }, 60000);
 
     return () => {
       window.removeEventListener("beforeunload", handleUnload);

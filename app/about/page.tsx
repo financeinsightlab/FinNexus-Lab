@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import HeroBackground from '@/components/ui/HeroBackground';
 
 interface Skill {
   cat: string;
@@ -97,8 +98,9 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-brand-navy py-20">
-        <div className="wrap">
+      <header className="relative overflow-hidden bg-brand-navy py-20">
+        <HeroBackground />
+        <div className="wrap relative z-10">
           <p className="section-label text-teal-300 mb-5">About the Platform</p>
           <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
             What is FinNexus Lab?

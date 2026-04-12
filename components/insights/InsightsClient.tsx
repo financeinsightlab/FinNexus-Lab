@@ -4,6 +4,7 @@
 import { useState, useMemo } from 'react';
 import InsightCard from '@/components/insights/InsightCard';
 import type { InsightPost } from '@/types';
+import HeroBackground from '@/components/ui/HeroBackground';
 
 interface InsightsClientProps {
   posts: InsightPost[];
@@ -21,8 +22,9 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-gradient-to-r from-brand-navy via-brand-slate to-teal-900 py-20">
-        <div className="wrap">
+      <header className="relative overflow-hidden bg-gradient-to-r from-brand-navy via-brand-slate to-teal-900 py-20">
+        <HeroBackground />
+        <div className="wrap relative z-10">
           <p className="section-label text-teal-300 mb-5">Strategic Insights</p>
           <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
             Analytical Notes

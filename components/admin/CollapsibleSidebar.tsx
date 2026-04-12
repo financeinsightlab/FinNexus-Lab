@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { 
-  BarChart3, 
-  Users, 
-  Settings, 
-  FileText, 
+import {
+  BarChart3,
+  Users,
+  Settings,
+  FileText,
   LayoutDashboard,
   ChevronRight,
   ArrowLeft,
@@ -15,7 +15,8 @@ import {
   Menu,
   X,
   Target,
-  Lock
+  Lock,
+  Image as ImageIcon
 } from "lucide-react"
 
 interface CollapsibleSidebarProps {
@@ -71,6 +72,7 @@ export default function CollapsibleSidebar({
   const menuItems = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard, adminOnly: true },
     { label: "Content CMS", href: "/admin/cms", icon: FileText },
+    { label: "Media Library", href: "/admin/media", icon: ImageIcon },
     { label: "Predictions", href: "/admin/predictions", icon: Target },
     { label: "User Management", href: "/admin/users", icon: Users, adminOnly: true },
     { label: "Analytics", href: "/admin/analytics", icon: BarChart3, adminOnly: true },
@@ -86,7 +88,7 @@ export default function CollapsibleSidebar({
       {/* Mobile Toggle Button (only visible on small screens) */}
       <button
         onClick={toggleMobileSidebar}
-        className="lg:hidden fixed top-20 left-4 z-50 p-2 rounded-lg bg-[#1A1F2E] border border-[#2D3748] text-white"
+        className="lg:hidden fixed top-20 left-4 z-50 p-2 rounded-lg bg-white dark:bg-[#1A1F2E] border border-gray-200 dark:border-[#2D3748] text-gray-700 dark:text-white"
         aria-label={isMobileOpen ? "Close sidebar" : "Open sidebar"}
       >
         {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -97,7 +99,7 @@ export default function CollapsibleSidebar({
         className={`
           fixed top-16 bottom-0 left-0 
           ${sidebarWidth}
-          bg-[#1A1F2E] border-r border-[#2D3748] z-40 
+          bg-white dark:bg-[#1A1F2E] border-r border-gray-200 dark:border-[#2D3748] z-40 
           hidden lg:flex lg:flex-col
           transition-all duration-300 ease-in-out
           ${isCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}
@@ -196,7 +198,7 @@ export default function CollapsibleSidebar({
           </nav>
 
           {/* User Profile / Exit Control */}
-          <div className="p-4 border-t border-[#2D3748]">
+          <div className="p-4 border-t border-gray-200 dark:border-[#2D3748]">
             <div className={`
               flex items-center gap-3 px-4 py-4 mb-2 
               bg-white/5 rounded-2xl border border-white/5
@@ -255,7 +257,7 @@ export default function CollapsibleSidebar({
       <aside 
         className={`
           lg:hidden fixed top-16 bottom-0 left-0 w-64
-          bg-[#1A1F2E] border-r border-[#2D3748] z-40
+          bg-white dark:bg-[#1A1F2E] border-r border-gray-200 dark:border-[#2D3748] z-40
           transform transition-transform duration-300 ease-in-out
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
           flex flex-col
@@ -288,7 +290,7 @@ export default function CollapsibleSidebar({
           </nav>
 
           {/* Mobile User Profile */}
-          <div className="p-4 border-t border-[#2D3748]">
+          <div className="p-4 border-t border-gray-200 dark:border-[#2D3748]">
             <div className="flex items-center gap-3 px-4 py-4 mb-2 bg-white/5 rounded-2xl border border-white/5">
               <div className="w-8 h-8 rounded-full bg-[#0D6E6E] flex items-center justify-center text-xs font-bold text-white shadow-lg">
                 {userInitial}

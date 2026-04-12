@@ -18,17 +18,17 @@ import Suggestion from "@tiptap/suggestion"
 import tippy, { Instance } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
-import { 
-  Bold, 
-  Italic, 
-  Underline as UnderlineIcon, 
-  List, 
-  ListOrdered, 
-  Heading1, 
-  Heading2, 
-  Quote, 
-  Undo, 
-  Redo, 
+import {
+  Bold,
+  Italic,
+  Underline as UnderlineIcon,
+  List,
+  ListOrdered,
+  Heading1,
+  Heading2,
+  Quote,
+  Undo,
+  Redo,
   Link as LinkIcon,
   Image as ImageIcon,
   Type,
@@ -39,6 +39,7 @@ import {
 } from "lucide-react"
 import React, { useState, useEffect } from "react"
 import { CommandList, getSuggestionItems } from "./editor/extensions/SlashCommandItems"
+import MediaLibraryModal from "./MediaLibraryModal"
 
 interface EditorProps {
   content: string
@@ -71,6 +72,7 @@ const SlashCommand = Extension.create({
 const Editor = ({ content, onChange }: EditorProps) => {
   const [wordCount, setWordCount] = useState(0)
   const [readingTime, setReadingTime] = useState(0)
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false)
 
   const editor = useEditor({
     extensions: [
@@ -233,10 +235,11 @@ const Editor = ({ content, onChange }: EditorProps) => {
   if (!editor) return null
 
   const addImage = () => {
-    const url = window.prompt("Elite Image URL")
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run()
-    }
+    setShowMediaLibrary(true)
+  }
+
+  const handleMediaSelect = (mediaUrl: string) => {
+    editor.chain().focus().setImage({ src: mediaUrl }).run()
   }
 
   const setLink = () => {
@@ -371,6 +374,12 @@ const Editor = ({ content, onChange }: EditorProps) => {
           </button>
         </BubbleMenu>
       )} */}
+
+      <MediaLibraryModal
+        isOpen={showMediaLibrary}
+        onClose={() => setShowMediaLibrary(false)}
+        onSelect={handleMediaSelect}
+      />
     </div>
   )
 }

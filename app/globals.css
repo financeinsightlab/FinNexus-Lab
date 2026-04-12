@@ -114,6 +114,10 @@
     background: white;
     @apply antialiased;
   }
+  .dark body {
+    background: #0F1117;
+    color: #CBD5E1;
+  }
   ::selection {
     background-color: rgba(13, 110, 110, 0.15);
   }
@@ -247,14 +251,17 @@
    DARK MODE TOKENS
 ========================= */
 
+/* ── Body ── */
 .dark body {
   background: #0F1117;
   color: #CBD5E1;
 }
 
+/* ── Cards ── */
 .dark .card {
   background: #1A1F2E;
   border-color: #2D3748;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .dark .research-card {
@@ -262,22 +269,37 @@
   border-color: #2D3748;
 }
 
+/* ── Inputs ── */
 .dark .input {
   background: #1A1F2E;
   border-color: #374151;
   color: #E2E8F0;
 }
 
+/* ── Pills ── */
 .dark .pill-off {
   background: #1A1F2E;
   border-color: #374151;
   color: #CBD5E1;
 }
 
+.dark .pill-on {
+  background: #0D6E6E;
+  border-color: #0D6E6E;
+}
+
+/* ── Typography ── */
 .dark h1,
 .dark h2,
-.dark h3 {
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
   color: #E2E8F0;
+}
+
+.dark p {
+  color: #94A3B8;
 }
 
 .dark .text-brand-navy {
@@ -288,8 +310,25 @@
   color: #94A3B8;
 }
 
+.dark .text-gray-600 {
+  color: #94A3B8;
+}
+
+.dark .text-gray-700 {
+  color: #CBD5E1;
+}
+
+.dark .text-gray-800 {
+  color: #E2E8F0;
+}
+
+/* ── Backgrounds ── */
 .dark .bg-white {
   background: #0F1117;
+}
+
+.dark .bg-gray-50 {
+  background: #111827;
 }
 
 .dark .bg-brand-silver {
@@ -300,46 +339,67 @@
   background: #0F1117;
 }
 
+/* ── Service / Pricing colored card backgrounds ── */
+.dark .bg-blue-50 {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.dark .bg-teal-50 {
+  background: rgba(13, 110, 110, 0.08);
+}
+
+.dark .bg-amber-50 {
+  background: rgba(146, 98, 10, 0.08);
+}
+
+.dark .bg-purple-50 {
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.dark .bg-green-50 {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.dark .bg-emerald-50 {
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.dark .bg-rose-50 {
+  background: rgba(244, 63, 94, 0.08);
+}
+
+/* ── Borders ── */
 .dark .border-gray-100,
 .dark .border-gray-200 {
   border-color: #1F2937;
 }
 
-.dark header.bg-white\/95 {
-  background: rgba(15, 17, 23, 0.95) !important;
-}
-/* =========================
-   DARK MODE ENHANCED DEPTH
-========================= */
-
-/* Section backgrounds */
-.dark section {
-  background: transparent;
+.dark .border-gray-300 {
+  border-color: #374151;
 }
 
-/* Add subtle gradient to main background */
-.dark body {
-  background: radial-gradient(circle at top, #111827 0%, #0F1117 60%);
-}
+/* ── Specific section borders ── */
+.dark .border-blue-100 { border-color: rgba(37, 99, 235, 0.2); }
+.dark .border-teal-100 { border-color: rgba(13, 110, 110, 0.2); }
+.dark .border-amber-100 { border-color: rgba(146, 98, 10, 0.2); }
+.dark .border-purple-100 { border-color: rgba(139, 92, 246, 0.2); }
+.dark .border-green-100 { border-color: rgba(34, 197, 94, 0.2); }
 
-/* Cards feel elevated */
-.dark .card {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
+/* ── Tags ── */
+.dark .tag-teal { background: rgba(13, 110, 110, 0.15); color: #5EEAD4; }
+.dark .tag-navy { background: rgba(37, 99, 235, 0.15); color: #93C5FD; }
+.dark .tag-gold { background: rgba(146, 98, 10, 0.15); color: #FCD34D; }
+.dark .tag-green { background: rgba(34, 197, 94, 0.15); color: #86EFAC; }
+.dark .tag-silver { background: rgba(148, 163, 184, 0.15); color: #CBD5E1; }
+.dark .tag-red { background: rgba(239, 68, 68, 0.15); color: #FCA5A5; }
 
-/* Headings sharper */
-.dark h1,
-.dark h2,
-.dark h3 {
-  letter-spacing: -0.01em;
-}
+/* ── Small bg / text tokens used by pricing cards ── */
+.dark .bg-teal-100 { background: rgba(13, 110, 110, 0.15); }
+.dark .text-teal-800 { color: #5EEAD4; }
+.dark .bg-amber-50 { background: rgba(146, 98, 10, 0.08); }
+.dark .text-amber-800 { color: #FCD34D; }
 
-/* Improve paragraph readability */
-.dark p {
-  color: #94A3B8;
-}
-
-/* Buttons refinement */
+/* ── Buttons ── */
 .dark .btn-primary {
   background: #0D6E6E;
 }
@@ -348,15 +408,153 @@
   background: #0F9E9E;
 }
 
-/* Footer separation */
+.dark .btn-outline {
+  border-color: #475569;
+  color: #CBD5E1;
+}
+
+.dark .btn-outline:hover {
+  background: #1F2937;
+  border-color: #94A3B8;
+  color: #E2E8F0;
+}
+
+/* ── Navbar ── */
+.dark header.bg-white\/95 {
+  background: rgba(15, 17, 23, 0.95) !important;
+}
+
+.dark header {
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+/* ── Footer ── */
 .dark footer {
   border-top: 1px solid #1F2937;
 }
 
-/* Navbar shadow tweak */
-.dark header {
-  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+/* ── Section backgrounds ── */
+.dark section {
+  background: transparent;
 }
+
+/* ── Gradient backgrounds used in body sections ── */
+.dark .bg-gradient-to-b.from-slate-50 {
+  --tw-gradient-from: #111827;
+}
+
+/* ── Stat-card (homepage hero) ── */
+.dark .stat-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* =========================
+   ADMIN & PREDICTIONS PANEL THEMING
+   
+   These override the hardcoded hex colors used across 
+   admin pages & predictions to make them theme-responsive.
+   In dark mode, the original colors show through unchanged.
+   In light mode, they get swapped for clean white/gray tones.
+========================= */
+
+/* ── Admin panel cards & sections ── */
+.bg-\[\#1A1F2E\] {
+  background: white;
+}
+.dark .bg-\[\#1A1F2E\] {
+  background: #1A1F2E;
+}
+
+.bg-\[\#1A1F2E\]\/80 {
+  background: rgba(255, 255, 255, 0.95);
+}
+.dark .bg-\[\#1A1F2E\]\/80 {
+  background: rgba(26, 31, 46, 0.8);
+}
+
+.bg-\[\#1A1F2E\]\/50 {
+  background: rgba(241, 245, 249, 0.8);
+}
+.dark .bg-\[\#1A1F2E\]\/50 {
+  background: rgba(26, 31, 46, 0.5);
+}
+
+/* ── Admin dark backgrounds ── */
+.bg-\[\#0F1117\] {
+  background: #f8fafc;
+}
+.dark .bg-\[\#0F1117\] {
+  background: #0F1117;
+}
+
+.bg-\[\#0B0D13\] {
+  background: #f1f5f9;
+}
+.dark .bg-\[\#0B0D13\] {
+  background: #0B0D13;
+}
+
+.bg-\[\#0f1522\] {
+  background: #ffffff;
+}
+.dark .bg-\[\#0f1522\] {
+  background: #0f1522;
+}
+
+.bg-\[\#0f1c2d\] {
+  background: #f1f5f9;
+}
+.dark .bg-\[\#0f1c2d\] {
+  background: #0f1c2d;
+}
+
+/* ── Admin borders ── */
+.border-\[\#2D3748\] {
+  border-color: #e2e8f0;
+}
+.dark .border-\[\#2D3748\] {
+  border-color: #2D3748;
+}
+
+/* ── Admin text colors (scoped to avoid breaking branded sections) ── */
+/* Note: admin panels get white backgrounds in light mode via the overrides above.
+   Text inside those panels uses dark heading/paragraph styles from the 
+   existing dark mode token system (.dark h1, .dark p, etc.).
+   We don't override .text-white globally as it would break hero sections & footer. */
+
+/* ── Predictions page backgrounds ── */
+.bg-\[\#1A2B3C\] {
+  background: #1A2B3C;
+}
+
+/* ── Admin subtle backgrounds ── */
+:not(.dark) .bg-white\/5 {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+:not(.dark) .bg-white\/10 {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:not(.dark) .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+:not(.dark) .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+:not(.dark) .hover\:bg-white\/5:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+:not(.dark) .hover\:bg-white\/10:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+
+
 /* =========================
    GLOBAL UI POLISH
 ========================= */
@@ -433,52 +631,80 @@ aside[aria-label="Mobile navigation"] {
  }
 
  /* ─── EDITOR COMPONENT STYLES ──────────────────────────────────────────────
-    Styles for rich editor components added via slash commands
+    Styles for rich editor components added via slash commands.
+    Light-mode defaults with .dark overrides for proper theming.
  ──────────────────────────────────────────────────────────────────────────── */
+
+ /* ── Accent Box ── */
  .accent-box {
-   background: rgba(13, 110, 110, 0.1);
+   background: rgba(13, 110, 110, 0.06);
    border-left: 4px solid #0D6E6E;
    padding: 1.5rem;
    border-radius: 0.75rem;
-   color: #cbd5e1;
+   color: #374151;
    margin: 1.5rem 0;
  }
+ .dark .accent-box {
+   background: rgba(13, 110, 110, 0.1);
+   color: #cbd5e1;
+ }
 
+ /* ── Warning Callout ── */
  .warning-callout {
-   background: rgba(155, 35, 53, 0.1);
+   background: rgba(155, 35, 53, 0.06);
    border-left: 4px solid #9B2335;
    padding: 1.5rem;
    border-radius: 0.75rem;
-   color: #fecaca;
+   color: #7f1d1d;
    margin: 1.5rem 0;
  }
+ .dark .warning-callout {
+   background: rgba(155, 35, 53, 0.1);
+   color: #fecaca;
+ }
 
+ /* ── Data Chart Placeholder ── */
  .data-chart-placeholder {
+   background: #f1f5f9;
+   border: 2px dashed #cbd5e1;
+   padding: 2rem;
+   border-radius: 1rem;
+   text-align: center;
+   color: #64748b;
+   margin: 2rem 0;
+ }
+ .dark .data-chart-placeholder {
    background: rgba(30, 41, 59, 0.5);
-   border: 2px dashed #475569;
-   padding: 2rem;
-   border-radius: 1rem;
-   text-align: center;
+   border-color: #475569;
    color: #94a3b8;
-   margin: 2rem 0;
  }
 
+ /* ── Video Embed ── */
  .video-embed {
-   background: rgba(15, 23, 42, 0.7);
-   border: 1px solid #334155;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    padding: 2rem;
    border-radius: 1rem;
    text-align: center;
-   color: #94a3b8;
+   color: #64748b;
    margin: 2rem 0;
  }
+ .dark .video-embed {
+   background: rgba(15, 23, 42, 0.7);
+   border-color: #334155;
+   color: #94a3b8;
+ }
 
+ /* ── Timeline ── */
  .timeline {
-   background: rgba(30, 41, 59, 0.3);
+   background: #f8fafc;
    border-left: 3px solid #0D6E6E;
    padding: 1.5rem;
    border-radius: 0.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .timeline {
+   background: rgba(30, 41, 59, 0.3);
  }
 
  .timeline ul {
@@ -502,13 +728,18 @@ aside[aria-label="Mobile navigation"] {
    top: 0.25rem;
  }
 
+ /* ── Stat Card (editor widget) ── */
  .stat-card {
-   background: linear-gradient(135deg, rgba(13, 110, 110, 0.2), rgba(13, 110, 110, 0.05));
-   border: 1px solid rgba(13, 110, 110, 0.3);
+   background: linear-gradient(135deg, rgba(13, 110, 110, 0.08), rgba(13, 110, 110, 0.02));
+   border: 1px solid rgba(13, 110, 110, 0.2);
    padding: 1.5rem;
    border-radius: 1rem;
    text-align: center;
    margin: 1.5rem 0;
+ }
+ .dark .stat-card {
+   background: linear-gradient(135deg, rgba(13, 110, 110, 0.2), rgba(13, 110, 110, 0.05));
+   border-color: rgba(13, 110, 110, 0.3);
  }
 
  .stat-value {
@@ -520,34 +751,51 @@ aside[aria-label="Mobile navigation"] {
  }
 
  .stat-label {
-   color: #94a3b8;
+   color: #64748b;
    font-size: 0.875rem;
    text-transform: uppercase;
    letter-spacing: 0.05em;
  }
+ .dark .stat-label {
+   color: #94a3b8;
+ }
 
+ /* ── Team Profile ── */
  .team-profile {
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
+   padding: 1.5rem;
+   border-radius: 1rem;
+   margin: 1.5rem 0;
+ }
+ .dark .team-profile {
    background: rgba(30, 41, 59, 0.3);
-   border: 1px solid #475569;
-   padding: 1.5rem;
-   border-radius: 1rem;
-   margin: 1.5rem 0;
+   border-color: #475569;
  }
 
+ /* ── Goal Tracker ── */
  .goal-tracker {
-   background: rgba(30, 41, 59, 0.5);
-   border: 1px solid #475569;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    padding: 1.5rem;
    border-radius: 1rem;
    margin: 1.5rem 0;
  }
+ .dark .goal-tracker {
+   background: rgba(30, 41, 59, 0.5);
+   border-color: #475569;
+ }
 
+ /* ── Progress Bar ── */
  .progress-bar {
-   background: rgba(255, 255, 255, 0.1);
+   background: #e2e8f0;
    height: 0.75rem;
    border-radius: 9999px;
    overflow: hidden;
    margin: 1rem 0;
+ }
+ .dark .progress-bar {
+   background: rgba(255, 255, 255, 0.1);
  }
 
  .progress-fill {
@@ -556,40 +804,31 @@ aside[aria-label="Mobile navigation"] {
    border-radius: 9999px;
  }
 
+ /* ── Quick Tip ── */
  .quick-tip {
-   background: rgba(146, 98, 10, 0.1);
+   background: rgba(146, 98, 10, 0.06);
    border-left: 4px solid #92620A;
    padding: 1.5rem;
    border-radius: 0.75rem;
-   color: #fef3c7;
+   color: #78350f;
    margin: 1.5rem 0;
  }
-
- .btn-primary {
-   display: inline-flex;
-   align-items: center;
-   justify-content: center;
-   padding: 0.75rem 1.5rem;
-   border-radius: 0.75rem;
-   font-weight: 700;
-   color: white;
-   background: linear-gradient(135deg, #0D6E6E, #10b981);
-   transition: all 0.2s;
-   text-decoration: none;
+ .dark .quick-tip {
+   background: rgba(146, 98, 10, 0.1);
+   color: #fef3c7;
  }
 
- .btn-primary:hover {
-   opacity: 0.9;
-   transform: translateY(-2px);
- }
-
- /* New editor component styles for enhanced content elements */
+ /* ── Image Gallery ── */
  .image-gallery {
-   background: rgba(30, 41, 59, 0.3);
-   border: 1px solid #475569;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .image-gallery {
+   background: rgba(30, 41, 59, 0.3);
+   border-color: #475569;
  }
 
  .gallery-grid {
@@ -602,18 +841,26 @@ aside[aria-label="Mobile navigation"] {
  .gallery-grid img {
    border-radius: 0.75rem;
    overflow: hidden;
-   border: 1px solid #475569;
+   border: 1px solid #e2e8f0;
    width: 100%;
    height: auto;
  }
+ .dark .gallery-grid img {
+   border-color: #475569;
+ }
 
+ /* ── Comparison Table ── */
  .comparison-table {
-   background: rgba(30, 41, 59, 0.3);
-   border: 1px solid #475569;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
    overflow-x: auto;
+ }
+ .dark .comparison-table {
+   background: rgba(30, 41, 59, 0.3);
+   border-color: #475569;
  }
 
  .comparison-table table {
@@ -622,23 +869,34 @@ aside[aria-label="Mobile navigation"] {
  }
 
  .comparison-table th {
-   background: rgba(13, 110, 110, 0.2);
+   background: rgba(13, 110, 110, 0.08);
    padding: 0.75rem;
    text-align: left;
    border-bottom: 2px solid #0D6E6E;
  }
+ .dark .comparison-table th {
+   background: rgba(13, 110, 110, 0.2);
+ }
 
  .comparison-table td {
    padding: 0.75rem;
-   border-bottom: 1px solid #475569;
+   border-bottom: 1px solid #e2e8f0;
+ }
+ .dark .comparison-table td {
+   border-bottom-color: #475569;
  }
 
+ /* ── Financial Metric ── */
  .financial-metric {
-   background: rgba(13, 110, 110, 0.1);
-   border: 1px solid #0D6E6E;
+   background: rgba(13, 110, 110, 0.05);
+   border: 1px solid rgba(13, 110, 110, 0.2);
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .financial-metric {
+   background: rgba(13, 110, 110, 0.1);
+   border-color: #0D6E6E;
  }
 
  .metric-header {
@@ -652,6 +910,9 @@ aside[aria-label="Mobile navigation"] {
    font-size: 0.875rem;
    text-transform: uppercase;
    letter-spacing: 0.05em;
+   color: #64748b;
+ }
+ .dark .metric-label {
    color: #94a3b8;
  }
 
@@ -663,6 +924,10 @@ aside[aria-label="Mobile navigation"] {
  }
 
  .metric-trend.positive {
+   background: rgba(34, 197, 94, 0.1);
+   color: #16a34a;
+ }
+ .dark .metric-trend.positive {
    background: rgba(34, 197, 94, 0.2);
    color: #86efac;
  }
@@ -670,22 +935,33 @@ aside[aria-label="Mobile navigation"] {
  .metric-value {
    font-size: 2.5rem;
    font-weight: 700;
-   color: #10b981;
+   color: #0D6E6E;
    margin: 0.5rem 0;
+ }
+ .dark .metric-value {
+   color: #10b981;
  }
 
  .metric-period {
    font-size: 0.875rem;
-   color: #94a3b8;
+   color: #64748b;
    font-style: italic;
  }
+ .dark .metric-period {
+   color: #94a3b8;
+ }
 
+ /* ── Process Flow ── */
  .process-flow {
-   background: rgba(30, 41, 59, 0.3);
-   border: 1px solid #475569;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .process-flow {
+   background: rgba(30, 41, 59, 0.3);
+   border-color: #475569;
  }
 
  .process-flow ol {
@@ -698,12 +974,16 @@ aside[aria-label="Mobile navigation"] {
    padding-left: 0.5rem;
  }
 
+ /* ── Testimonial ── */
  .testimonial {
-   background: rgba(146, 98, 10, 0.1);
+   background: rgba(146, 98, 10, 0.05);
    border-left: 4px solid #92620A;
    border-radius: 0.75rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .testimonial {
+   background: rgba(146, 98, 10, 0.1);
  }
 
  .testimonial-content {
@@ -724,15 +1004,23 @@ aside[aria-label="Mobile navigation"] {
 
  .testimonial-author span {
    font-size: 0.875rem;
+   color: #64748b;
+ }
+ .dark .testimonial-author span {
    color: #94a3b8;
  }
 
+ /* ── Risk Assessment ── */
  .risk-assessment {
-   background: rgba(220, 38, 38, 0.1);
-   border: 1px solid #dc2626;
+   background: rgba(220, 38, 38, 0.05);
+   border: 1px solid rgba(220, 38, 38, 0.3);
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .risk-assessment {
+   background: rgba(220, 38, 38, 0.1);
+   border-color: #dc2626;
  }
 
  .risk-grid {
@@ -750,29 +1038,49 @@ aside[aria-label="Mobile navigation"] {
  }
 
  .risk-item.high {
+   background: rgba(220, 38, 38, 0.1);
+   color: #dc2626;
+   border: 1px solid rgba(220, 38, 38, 0.3);
+ }
+ .dark .risk-item.high {
    background: rgba(220, 38, 38, 0.2);
    color: #fca5a5;
-   border: 1px solid #dc2626;
+   border-color: #dc2626;
  }
 
  .risk-item.medium {
+   background: rgba(245, 158, 11, 0.1);
+   color: #d97706;
+   border: 1px solid rgba(245, 158, 11, 0.3);
+ }
+ .dark .risk-item.medium {
    background: rgba(245, 158, 11, 0.2);
    color: #fcd34d;
-   border: 1px solid #f59e0b;
+   border-color: #f59e0b;
  }
 
  .risk-item.low {
+   background: rgba(34, 197, 94, 0.1);
+   color: #16a34a;
+   border: 1px solid rgba(34, 197, 94, 0.3);
+ }
+ .dark .risk-item.low {
    background: rgba(34, 197, 94, 0.2);
    color: #86efac;
-   border: 1px solid #22c55e;
+   border-color: #22c55e;
  }
 
+ /* ── Case Study ── */
  .case-study {
-   background: rgba(30, 41, 59, 0.3);
-   border: 1px solid #475569;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .case-study {
+   background: rgba(30, 41, 59, 0.3);
+   border-color: #475569;
  }
 
  .case-study-stats {
@@ -783,30 +1091,36 @@ aside[aria-label="Mobile navigation"] {
  }
 
  .stat {
-   background: rgba(255, 255, 255, 0.05);
+   background: #f1f5f9;
    border-radius: 0.75rem;
    padding: 1rem;
    text-align: center;
+ }
+ .dark .stat {
+   background: rgba(255, 255, 255, 0.05);
  }
 
  .stat-number {
    font-size: 1.5rem;
    font-weight: 700;
-   color: #10b981;
+   color: #0D6E6E;
    margin-bottom: 0.25rem;
  }
-
- .stat-label {
-   font-size: 0.875rem;
-   color: #94a3b8;
+ .dark .stat-number {
+   color: #10b981;
  }
 
+ /* ── Tech Stack ── */
  .tech-stack {
-   background: rgba(30, 41, 59, 0.3);
-   border: 1px solid #475569;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .tech-stack {
+   background: rgba(30, 41, 59, 0.3);
+   border-color: #475569;
  }
 
  .tech-items {
@@ -817,38 +1131,54 @@ aside[aria-label="Mobile navigation"] {
  }
 
  .tech-item {
-   background: rgba(255, 255, 255, 0.05);
+   background: #f1f5f9;
    border-radius: 0.75rem;
    padding: 0.75rem;
    text-align: center;
    font-family: monospace;
    font-size: 0.875rem;
  }
+ .dark .tech-item {
+   background: rgba(255, 255, 255, 0.05);
+ }
 
+ /* ── Data Visualization ── */
  .data-visualization {
-   background: rgba(30, 41, 59, 0.3);
-   border: 1px solid #475569;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
  }
+ .dark .data-visualization {
+   background: rgba(30, 41, 59, 0.3);
+   border-color: #475569;
+ }
 
  .chart-placeholder {
    height: 200px;
-   background: rgba(255, 255, 255, 0.05);
+   background: #f1f5f9;
    border-radius: 0.75rem;
    display: flex;
    align-items: center;
    justify-content: center;
    margin-top: 1rem;
  }
+ .dark .chart-placeholder {
+   background: rgba(255, 255, 255, 0.05);
+ }
 
+ /* ── Executive Summary ── */
  .executive-summary {
-   background: rgba(13, 110, 110, 0.1);
-   border: 1px solid #0D6E6E;
+   background: rgba(13, 110, 110, 0.05);
+   border: 1px solid rgba(13, 110, 110, 0.2);
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .executive-summary {
+   background: rgba(13, 110, 110, 0.1);
+   border-color: #0D6E6E;
  }
 
  .key-points {
@@ -859,22 +1189,33 @@ aside[aria-label="Mobile navigation"] {
  }
 
  .key-point {
-   background: rgba(255, 255, 255, 0.05);
+   background: #f1f5f9;
    border-radius: 0.75rem;
    padding: 1rem;
  }
+ .dark .key-point {
+   background: rgba(255, 255, 255, 0.05);
+ }
 
+ /* ── FAQ Section (editor widget) ── */
  .faq-section {
-   background: rgba(30, 41, 59, 0.3);
-   border: 1px solid #475569;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
  }
+ .dark .faq-section {
+   background: rgba(30, 41, 59, 0.3);
+   border-color: #475569;
+ }
 
  .faq-item {
-   border-bottom: 1px solid #475569;
+   border-bottom: 1px solid #e2e8f0;
    padding: 1rem 0;
+ }
+ .dark .faq-item {
+   border-bottom-color: #475569;
  }
 
  .faq-item:last-child {
@@ -886,6 +1227,7 @@ aside[aria-label="Mobile navigation"] {
    margin-bottom: 0.5rem;
  }
 
+ /* ── CTA Section ── */
  .cta-section {
    background: linear-gradient(135deg, #0D6E6E, #10b981);
    border-radius: 1rem;
@@ -912,12 +1254,17 @@ aside[aria-label="Mobile navigation"] {
    transform: translateY(-2px);
  }
 
+ /* ── Milestone Timeline ── */
  .milestone-timeline {
-   background: rgba(30, 41, 59, 0.3);
-   border: 1px solid #475569;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .milestone-timeline {
+   background: rgba(30, 41, 59, 0.3);
+   border-color: #475569;
  }
 
  .milestone {
@@ -925,8 +1272,11 @@ aside[aria-label="Mobile navigation"] {
    align-items: center;
    margin: 1rem 0;
    padding: 1rem;
-   background: rgba(255, 255, 255, 0.05);
+   background: #f1f5f9;
    border-radius: 0.75rem;
+ }
+ .dark .milestone {
+   background: rgba(255, 255, 255, 0.05);
  }
 
  .milestone-date {
@@ -944,12 +1294,17 @@ aside[aria-label="Mobile navigation"] {
    font-weight: 600;
  }
 
+ /* ── Competitive Analysis ── */
  .competitive-analysis {
-   background: rgba(30, 41, 59, 0.3);
-   border: 1px solid #475569;
+   background: #f8fafc;
+   border: 1px solid #e2e8f0;
    border-radius: 1rem;
    padding: 1.5rem;
    margin: 1.5rem 0;
+ }
+ .dark .competitive-analysis {
+   background: rgba(30, 41, 59, 0.3);
+   border-color: #475569;
  }
 
  .competitor-grid {
@@ -960,9 +1315,12 @@ aside[aria-label="Mobile navigation"] {
  }
 
  .competitor {
-   background: rgba(255, 255, 255, 0.05);
+   background: #f1f5f9;
    border-radius: 0.75rem;
    padding: 1rem;
+ }
+ .dark .competitor {
+   background: rgba(255, 255, 255, 0.05);
  }
 
  .competitor-name {
@@ -973,5 +1331,8 @@ aside[aria-label="Mobile navigation"] {
 
  .competitor-strength {
    font-size: 0.875rem;
+   color: #64748b;
+ }
+ .dark .competitor-strength {
    color: #94a3b8;
  }

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { PrismaClient } from '@prisma/client';
 import { auth } from '@/auth';
 import { getInsightBySlug, getResearchBySlug } from '@/lib/content';
+import HeroBackground from '@/components/ui/HeroBackground';
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -104,8 +105,9 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <header className="bg-brand-navy py-16">
-        <div className="wrap">
+      <header className="relative overflow-hidden bg-brand-navy py-16">
+        <HeroBackground />
+        <div className="wrap relative z-10">
           <h1 className="text-white text-3xl md:text-4xl font-extrabold">
             Welcome back, {displayName}
           </h1>

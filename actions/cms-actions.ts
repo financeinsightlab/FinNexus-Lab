@@ -31,6 +31,10 @@ export type PostFormData = {
   
   // Scheduling
   scheduledPublishAt?: Date | null
+  
+  // Visual Editor Blocks
+  contentType?: 'MARKDOWN' | 'BLOCKS'
+  blockContent?: any
 }
 
 export async function createPost(formData: PostFormData) {
@@ -63,6 +67,8 @@ export async function createPost(formData: PostFormData) {
       targetAudience: formData.targetAudience || [],
       authorId: validAuthorId,
       publishedAt: formData.published ? new Date() : null,
+      contentType: formData.contentType || "MARKDOWN",
+      blockContent: formData.blockContent || null,
     },
   })
 
@@ -94,6 +100,8 @@ export async function updatePost(id: string, formData: PostFormData) {
       tags: formData.tags || [],
       targetAudience: formData.targetAudience || [],
       publishedAt: formData.published ? (formData.publishedAt || new Date()) : null,
+      contentType: formData.contentType || "MARKDOWN",
+      blockContent: formData.blockContent || null,
     },
   })
 

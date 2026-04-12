@@ -62,7 +62,7 @@ export default function AdminLayoutClient({
     : "lg:ml-64"  // 256px when expanded
 
   return (
-    <div className="flex min-h-screen bg-[#0F1117] text-slate-300 font-sans mt-16">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-[#0F1117] text-gray-800 dark:text-slate-300 font-sans mt-16">
       <CollapsibleSidebar 
         userName={userName}
         userRole={userRole}

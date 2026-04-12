@@ -59,7 +59,7 @@ export default function LiveAnalyticsClient({ initialLive, topPages, totalViews,
   }, [])
 
   useEffect(() => {
-    const interval = setInterval(refresh, 30000)
+    const interval = setInterval(refresh, 60000) // Increased from 30s to 60s to reduce server load
     return () => clearInterval(interval)
   }, [refresh])
 

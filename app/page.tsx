@@ -11,6 +11,7 @@ import ResearchGrid from '@/components/research/ResearchGrid';
 import InsightGrid from '@/components/insights/InsightGrid';
 import NewsletterForm from '@/components/NewsletterForm';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import HeroBackground from '@/components/ui/HeroBackground';
 import { getFeaturedResearch, getFeaturedInsights } from '@/lib/content';
 import { prisma } from '@/lib/prisma';
 import type { ResearchPost, InsightPost } from '@/types';
@@ -74,11 +75,7 @@ export default async function HomePage() {
   return (
     <>
       <section className="relative min-h-screen bg-brand-navy flex items-center overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-radial from-teal-500/18 to-transparent rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-radial from-gold-500/14 to-transparent rounded-full pointer-events-none" />
-        <div
-          className="absolute inset-0 opacity-[0.035] pointer-events-none bg-grid"
-        />
+        <HeroBackground />
         <div className="wrap relative z-10 py-32 md:py-40">
           <p className="section-label text-teal-300 mb-5 anim-fade">Financial Intelligence Platform</p>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.08] mb-6 anim-fade-up">

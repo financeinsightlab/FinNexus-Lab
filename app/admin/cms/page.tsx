@@ -15,6 +15,7 @@ import {
 import Link from "next/link"
 import React from "react"
 import ActionButtons from "./ActionButtons"
+import HeroBackground from "@/components/ui/HeroBackground"
 
 type PostWithAuthor = Post & { author: { name: string | null } }
 
@@ -61,7 +62,35 @@ export default async function CMSDashboard({
         orderBy: { createdAt: "desc" },
         skip,
         take: pageSize,
-        include: { author: { select: { name: true } } },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          excerpt: true,
+          content: true,
+          type: true,
+          published: true,
+          featuredImage: true,
+          authorId: true,
+          seoTitle: true,
+          metaDescription: true,
+          focusKeywords: true,
+          ogImage: true,
+          ogTitle: true,
+          tags: true,
+          difficulty: true,
+          targetAudience: true,
+          contentStatus: true,
+          estimatedReadingTime: true,
+          scheduledPublishAt: true,
+          viewCount: true,
+          publishedAt: true,
+          createdAt: true,
+          updatedAt: true,
+          blockContent: true,
+          contentType: true,
+          author: { select: { name: true } }
+        },
       }),
       prisma.post.count({ where }),
       prisma.post.groupBy({ by: ["type"], _count: { id: true } }),
@@ -71,6 +100,9 @@ export default async function CMSDashboard({
     grouped.forEach((g) => { typeCounts[g.type] = (g._count as any).id })
   } catch (e) {
     console.error("Prisma fetch failed:", e)
+    // Provide empty data to prevent page crash
+    posts = []
+    totalCount = 0
   }
 
   const totalPages = Math.ceil(totalCount / pageSize)
@@ -106,18 +138,21 @@ export default async function CMSDashboard({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <span className="section-label">Library Management</span>
-          <h1 className="text-3xl font-extrabold text-white mt-2">Content Repository</h1>
-          <p className="text-slate-400 text-sm mt-2 max-w-md">
-            All content — from MDX files and CMS entries — in one place.
-          </p>
+      <div className="relative overflow-hidden bg-brand-navy rounded-3xl p-8 md:p-10 shadow-xl border border-white/5">
+        <HeroBackground />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <span className="section-label text-teal-400">Library Management</span>
+            <h1 className="text-3xl font-extrabold text-white mt-2">Content Repository</h1>
+            <p className="text-slate-300 text-sm mt-2 max-w-md">
+              All content — from MDX files and CMS entries — in one place.
+            </p>
+          </div>
+          <Link href="/admin/cms/new" className="btn-primary bg-white text-brand-navy hover:bg-gray-100 flex items-center justify-center gap-2 group shadow-lg">
+            <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform" />
+            Create New Entry
+          </Link>
         </div>
-        <Link href="/admin/cms/new" className="btn-primary flex items-center justify-center gap-2 group">
-          <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform" />
-          Create New Entry
-        </Link>
       </div>
 
       {/* Type tabs */}
@@ -187,7 +222,7 @@ export default async function CMSDashboard({
                   <tr key={post.id} className="hover:bg-white/[0.02] transition-colors group">
                     <td className="px-6 py-4">
                       <div className="max-w-xs md:max-w-sm">
-                        <p className="text-sm font-bold text-white group-hover:text-[#0D6E6E] transition-colors line-clamp-1">{post.title}</p>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-[#0D6E6E] transition-colors line-clamp-1">{post.title}</p>
                         <p className="text-[10px] text-slate-600 font-mono mt-0.5 truncate">{post.slug}</p>
                       </div>
                     </td>
@@ -252,7 +287,7 @@ export default async function CMSDashboard({
                         <FileText className="w-8 h-8 opacity-20" />
                       </div>
                       <div>
-                        <h4 className="text-white font-bold">No content found</h4>
+                        <h4 className="text-gray-900 dark:text-white font-bold">No content found</h4>
                         <p className="text-slate-500 text-sm mt-1">
                           {search ? `No results for "${search}"` : "Your content repository is empty."}
                         </p>
@@ -272,7 +307,7 @@ export default async function CMSDashboard({
         {totalPages > 1 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-[#2D3748]">
             <p className="text-xs text-slate-500">
-              Showing <span className="text-white font-bold">{skip + 1}–{Math.min(skip + pageSize, totalCount)}</span> of <span className="text-white font-bold">{totalCount}</span> entries
+              Showing <span className="text-gray-900 dark:text-white font-bold">{skip + 1}–{Math.min(skip + pageSize, totalCount)}</span> of <span className="text-gray-900 dark:text-white font-bold">{totalCount}</span> entries
             </p>
             <div className="flex items-center gap-2">
               {page > 1 && (

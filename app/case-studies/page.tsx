@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllCaseStudies } from '@/lib/content';
+import HeroBackground from '@/components/ui/HeroBackground';
 import Tag from '@/components/ui/Tag';
 import CTAButton from '@/components/ui/CTAButton';
 import { prisma } from "@/lib/prisma";
@@ -42,8 +43,9 @@ export default async function CaseStudiesPage() {
   return (
     <div className="min-h-screen">
       {/* Page header */}
-      <section className="bg-brand-navy py-20">
-        <div className="wrap max-w-6xl">
+      <section className="relative overflow-hidden bg-brand-navy py-20">
+        <HeroBackground />
+        <div className="wrap max-w-6xl relative z-10">
           <div className="max-w-3xl">
             <span className="section-label text-brand-teal">Case Studies</span>
             <h1 className="text-4xl md:text-6xl font-bold text-white mt-4 mb-6">

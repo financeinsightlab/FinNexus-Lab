@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getOverduePendingPredictions, getAllPredictions, getAllAnalystScores } from '@/lib/predictions';
 import { resolvePredictionAction, createPredictionAction, deletePredictionAction } from './actions';
 import Link from 'next/link';
+import HeroBackground from '@/components/ui/HeroBackground';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,22 +37,25 @@ export default async function AdminPredictionsPage() {
   return (
     <div className="space-y-10">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <span className="section-label">Admin · Predictions Engine</span>
-          <h1 className="text-4xl font-extrabold text-white mt-2">
-            🎯 Prediction Resolution Centre
-          </h1>
-          <p className="text-slate-400 mt-2">
-            Resolve overdue predictions, track calibration scores, and create new predictions.
-          </p>
+      <div className="relative overflow-hidden bg-brand-navy rounded-3xl p-8 md:p-10 shadow-xl border border-white/5">
+        <HeroBackground />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <span className="section-label text-teal-400">Admin · Predictions Engine</span>
+            <h1 className="text-4xl font-extrabold text-white mt-2">
+              🎯 Prediction Resolution Centre
+            </h1>
+            <p className="text-slate-300 mt-2 max-w-xl">
+              Resolve overdue predictions, track calibration scores, and create new predictions.
+            </p>
+          </div>
+          <Link
+            href="/predictions"
+            className="btn-primary bg-white text-brand-navy hover:bg-gray-100 text-sm whitespace-nowrap shadow-lg"
+          >
+            View Public Board →
+          </Link>
         </div>
-        <Link
-          href="/predictions"
-          className="btn-primary text-sm whitespace-nowrap"
-        >
-          View Public Board →
-        </Link>
       </div>
 
       {/* Stats */}
@@ -109,7 +113,7 @@ export default async function AdminPredictionsPage() {
                   </div>
 
                   {/* Claim */}
-                  <p className="text-white italic text-base leading-relaxed">
+                  <p className="text-gray-900 dark:text-white italic text-base leading-relaxed">
                     &ldquo;{p.claim}&rdquo;
                   </p>
 
@@ -166,7 +170,7 @@ export default async function AdminPredictionsPage() {
       {/* ─── Calibration Leaderboard ─── */}
       {scores.length > 0 && (
         <section className="bg-[#1A1F2E] rounded-2xl border border-[#2D3748] p-6 shadow-xl">
-          <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             🏆 Calibration Leaderboard
           </h2>
           <div className="space-y-3">
@@ -174,7 +178,7 @@ export default async function AdminPredictionsPage() {
               <div key={sc.id} className="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
                 <span className="text-slate-500 font-mono text-sm w-5">#{i + 1}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-semibold text-sm">{sc.author.name}</p>
+                  <p className="text-gray-900 dark:text-white font-semibold text-sm">{sc.author.name}</p>
                   <p className="text-slate-500 text-xs">{sc.totalPredictions} predictions · Streak: {sc.longestStreak}</p>
                 </div>
                 <div className="text-right">
@@ -197,7 +201,7 @@ export default async function AdminPredictionsPage() {
 
       {/* ─── Create Prediction ─── */}
       <section className="bg-[#1A1F2E] rounded-2xl border border-[#2D3748] p-6 shadow-xl">
-        <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
           ✏️ Create New Prediction
         </h2>
         <form action={createPredictionAction} className="space-y-4 max-w-2xl">
@@ -263,7 +267,7 @@ export default async function AdminPredictionsPage() {
 
       {/* ─── Manage All Predictions ─── */}
       <section className="bg-[#1A1F2E] rounded-2xl border border-[#2D3748] p-6 shadow-xl">
-        <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
           ⚙️ Manage All Predictions
         </h2>
         
@@ -274,7 +278,7 @@ export default async function AdminPredictionsPage() {
             {all.map((p) => (
               <div key={p.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-white/5 rounded-xl border border-white/5">
                 <div className="flex-1">
-                  <p className="text-white font-medium text-sm line-clamp-2">&ldquo;{p.claim}&rdquo;</p>
+                  <p className="text-gray-900 dark:text-white font-medium text-sm line-clamp-2">&ldquo;{p.claim}&rdquo;</p>
                   <p className="text-xs text-slate-500 mt-1">Author: {p.author.name} &bull; Status: {p.status}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">

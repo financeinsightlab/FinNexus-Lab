@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import dynamic from "next/dynamic"
 import Editor from "@/components/admin/Editor"
 import { updatePost, PostFormData } from "@/actions/cms-actions"
 import { ArticleType, Post } from "@prisma/client"
@@ -19,11 +20,18 @@ import {
   Type,
   X,
   Plus,
-  Sparkles
+  Sparkles,
+  Blocks,
+  PanelLeftClose,
+  PanelLeftOpen
 } from "lucide-react"
 import Link from "next/link"
 import React from "react"
 import { contentTemplates, applyTemplate } from "@/lib/templates"
+import { Block } from "@/lib/blocks/registry"
+import ContentRenderer from "@/components/ContentRenderer"
+
+const BlockEditor = dynamic(() => import('@/components/admin/block-editor/BlockEditor'), { ssr: false })
 
 type ActiveTab = "general" | "seo" | "social" | "advanced"
 
@@ -31,7 +39,19 @@ export default function EditClient({ post }: { post: Post & { author: { name: st
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState<ActiveTab>("general")
+  const [sidebarOpen, setSidebarOpen] = useState(false) // default closed for more space!
   const [previewMode, setPreviewMode] = useState(false)
+
+  // Content mode: markdown (Tiptap) or blocks (Visual Builder)
+  const [contentType, setContentType] = useState<'MARKDOWN' | 'BLOCKS'>((post as any).contentType || 'MARKDOWN')
+  const [blocks, setBlocks] = useState<Block[]>(() => {
+    try {
+      const bc = (post as any).blockContent
+      if (bc && Array.isArray(bc)) return bc as Block[]
+      if (bc && typeof bc === 'object' && 'blocks' in bc) return (bc as any).blocks as Block[]
+    } catch {}
+    return []
+  })
 
   // Core Data
   const [title, setTitle] = useState(post.title || "")
@@ -95,11 +115,20 @@ export default function EditClient({ post }: { post: Post & { author: { name: st
         }
       }
 
+      // When in blocks mode, also save blocks to the API
+      if (contentType === 'BLOCKS' && blocks.length > 0) {
+        await fetch('/api/blocks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ postId: post.id, blocks })
+        })
+      }
+
       const data: PostFormData = {
         title,
         slug,
         excerpt: excerpt || null,
-        content,
+        content: contentType === 'BLOCKS' ? '' : content,
         type,
         published: isPublishing,
         featuredImage: featuredImage || null,
@@ -113,7 +142,9 @@ export default function EditClient({ post }: { post: Post & { author: { name: st
         targetAudience,
         contentStatus: isPublishing ? "PUBLISHED" : contentStatus,
         estimatedReadingTime,
-        scheduledPublishAt: schedulePublish && isPublishing ? scheduledPublishAt : null
+        scheduledPublishAt: schedulePublish && isPublishing ? scheduledPublishAt : null,
+        contentType,
+        blockContent: contentType === 'BLOCKS' ? blocks as any : null,
       }
       
       await updatePost(post.id, data)
@@ -265,6 +296,26 @@ export default function EditClient({ post }: { post: Post & { author: { name: st
           >
             <Sparkles className="w-5 h-5" />
           </button>
+
+          {/* Content Type Switcher */}
+          <div className="flex items-center bg-black/30 border border-white/10 rounded-xl p-1 gap-1">
+            <button
+              onClick={() => setContentType('MARKDOWN')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${contentType === 'MARKDOWN' ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+              title="Classic Markdown / Rich Text editor"
+            >
+              <Type className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Markdown</span>
+            </button>
+            <button
+              onClick={() => setContentType('BLOCKS')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${contentType === 'BLOCKS' ? 'bg-[#0D6E6E] text-white shadow' : 'text-slate-500 hover:text-slate-300'}`}
+              title="Visual Block Builder"
+            >
+              <Blocks className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Block Editor</span>
+            </button>
+          </div>
           
           <button
             onClick={() => setPreviewMode(!previewMode)}
@@ -298,23 +349,30 @@ export default function EditClient({ post }: { post: Post & { author: { name: st
       <div className="flex-1 flex overflow-hidden">
         {/* PANEL 1: SETTINGS SELECTOR (LEFT SLIM) */}
         <aside className="w-16 bg-[#0B0D13] border-r border-white/5 flex flex-col items-center py-6 gap-6 shrink-0 z-50">
-          <button onClick={() => setActiveTab("general")} className={`p-3 rounded-2xl transition-all ${activeTab === "general" ? "bg-[#0D6E6E] text-white shadow-lg shadow-[#0D6E6E]/20" : "text-slate-600 hover:text-slate-300 hover:bg-white/5"}`} title="General Config">
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-3 text-slate-500 hover:text-white transition-all bg-white/5 rounded-2xl mb-4">
+            {sidebarOpen ? <PanelLeftClose className="w-5 h-5"/> : <PanelLeftOpen className="w-5 h-5"/>}
+          </button>
+          <button onClick={() => { setActiveTab("general"); setSidebarOpen(true); }} className={`p-3 rounded-2xl transition-all ${activeTab === "general" && sidebarOpen ? "bg-[#0D6E6E] text-white shadow-lg shadow-[#0D6E6E]/20" : "text-slate-600 hover:text-slate-300 hover:bg-white/5"}`} title="General Config">
             <Settings className="w-5 h-5" />
           </button>
-          <button onClick={() => setActiveTab("seo")} className={`p-3 rounded-2xl transition-all ${activeTab === "seo" ? "bg-[#0D6E6E] text-white shadow-lg shadow-[#0D6E6E]/20" : "text-slate-600 hover:text-slate-300 hover:bg-white/5"}`} title="SEO Optimization">
+          <button onClick={() => { setActiveTab("seo"); setSidebarOpen(true); }} className={`p-3 rounded-2xl transition-all ${activeTab === "seo" && sidebarOpen ? "bg-[#0D6E6E] text-white shadow-lg shadow-[#0D6E6E]/20" : "text-slate-600 hover:text-slate-300 hover:bg-white/5"}`} title="SEO Optimization">
             <Globe className="w-5 h-5" />
           </button>
-          <button onClick={() => setActiveTab("social")} className={`p-3 rounded-2xl transition-all ${activeTab === "social" ? "bg-[#0D6E6E] text-white shadow-lg shadow-[#0D6E6E]/20" : "text-slate-600 hover:text-slate-300 hover:bg-white/5"}`} title="Social Sharing">
+          <button onClick={() => { setActiveTab("social"); setSidebarOpen(true); }} className={`p-3 rounded-2xl transition-all ${activeTab === "social" && sidebarOpen ? "bg-[#0D6E6E] text-white shadow-lg shadow-[#0D6E6E]/20" : "text-slate-600 hover:text-slate-300 hover:bg-white/5"}`} title="Social Sharing">
             <Share2 className="w-5 h-5" />
           </button>
-          <button onClick={() => setActiveTab("advanced")} className={`p-3 rounded-2xl transition-all ${activeTab === "advanced" ? "bg-[#0D6E6E] text-white shadow-lg shadow-[#0D6E6E]/20" : "text-slate-600 hover:text-slate-300 hover:bg-white/5"}`} title="Advanced Ops">
+          <button onClick={() => { setActiveTab("advanced"); setSidebarOpen(true); }} className={`p-3 rounded-2xl transition-all ${activeTab === "advanced" && sidebarOpen ? "bg-[#0D6E6E] text-white shadow-lg shadow-[#0D6E6E]/20" : "text-slate-600 hover:text-slate-300 hover:bg-white/5"}`} title="Advanced Ops">
             <BarChart className="w-5 h-5" />
           </button>
         </aside>
 
         {/* PANEL 2: SETTINGS CONTENT (EXPANDED LEFT) */}
-        <aside className="w-80 bg-[#1A1F2E] border-r border-[#2D3748] p-8 overflow-y-auto no-scrollbar hidden xl:block shrink-0">
-          <div className="space-y-8 anim-fade">
+        {sidebarOpen && (
+          <aside className="w-80 bg-[#1A1F2E] border-r border-[#2D3748] p-8 overflow-y-auto no-scrollbar shrink-0 relative transition-all duration-300">
+            <button onClick={() => setSidebarOpen(false)} className="absolute top-4 right-4 p-2 bg-black/20 text-slate-400 hover:text-white rounded-lg">
+              <X className="w-4 h-4"/>
+            </button>
+            <div className="space-y-8 anim-fade mt-4">
             {activeTab === "general" && (
               <div className="space-y-6">
                 <div>
@@ -825,7 +883,8 @@ export default function EditClient({ post }: { post: Post & { author: { name: st
               </div>
             )}
           </div>
-        </aside>
+          </aside>
+        )}
 
         {/* MAIN VISUAL CANVAS / EDITOR SURFACE */}
         <main className="flex-1 flex flex-col overflow-y-auto bg-[#0F1117] relative scroll-smooth no-scrollbar">
@@ -849,9 +908,21 @@ export default function EditClient({ post }: { post: Post & { author: { name: st
                />
             </div>
             
-            <div className="space-y-6">
-                <label className="section-label text-slate-700">Primary Document Body</label>
-                <Editor content={content} onChange={setContent} />
+            <div className="space-y-6 flex-1 flex flex-col">
+                <div className="flex items-center justify-between">
+                  <label className="section-label text-slate-700">Primary Document Body</label>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{contentType} MODE</span>
+                </div>
+                
+                {contentType === 'BLOCKS' ? (
+                  <div className="flex-1 rounded-2xl overflow-hidden border border-[#2D3748] min-h-[600px] shadow-2xl relative">
+                    <BlockEditor initialBlocks={blocks} onChange={setBlocks} />
+                  </div>
+                ) : (
+                  <div className="min-h-[500px]">
+                    <Editor content={content} onChange={setContent} />
+                  </div>
+                )}
             </div>
           </div>
           
@@ -865,7 +936,9 @@ export default function EditClient({ post }: { post: Post & { author: { name: st
                    <h1 className="text-6xl font-extrabold text-white tracking-tight leading-[1.1]">{title || "Untitled Elite Report"}</h1>
                    <p className="text-2xl text-slate-500 font-serif leading-relaxed italic border-l-4 border-[#0D6E6E] pl-6 py-2">{excerpt || "Awaiting abstract draft..."}</p>
                  </div>
-                 <div className="prose prose-invert prose-2xl max-w-none font-serif text-slate-300" dangerouslySetInnerHTML={{ __html: content }} />
+                 <div className="mt-12 bg-[#1A1F2E] p-8 rounded-3xl border border-white/5">
+                   <ContentRenderer content={content} contentType={contentType} blocks={blocks} />
+                 </div>
                </div>
             </div>
           )}

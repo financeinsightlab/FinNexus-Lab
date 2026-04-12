@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import React from "react"
+import HeroBackground from "@/components/ui/HeroBackground"
 import type { Metadata } from "next"
 import UsersTableClient from "./UsersTableClient"
 import { Users as UsersIcon, ShieldCheck, Zap, Search, ChevronLeft, ChevronRight, Wifi } from "lucide-react"
@@ -101,17 +102,20 @@ export default async function AdminUsersPage({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <span className="section-label">Access Control</span>
-          <h1 className="text-3xl font-extrabold text-white mt-2">User Directory</h1>
-          <p className="text-slate-400 text-sm mt-2 max-w-md">
-            Live view of all members, their sessions, subscriptions, and activity.
-          </p>
-        </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-xs font-bold text-emerald-400">{onlineCount} Online Now</span>
+      <div className="relative overflow-hidden bg-brand-navy rounded-3xl p-8 md:p-10 shadow-xl border border-white/5">
+        <HeroBackground />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <span className="section-label text-teal-400">Access Control</span>
+            <h1 className="text-3xl font-extrabold text-white mt-2">User Directory</h1>
+            <p className="text-slate-300 text-sm mt-2 max-w-md">
+              Live view of all members, their sessions, subscriptions, and activity.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-400/30 rounded-xl shadow-lg backdrop-blur-sm">
+            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+            <span className="text-xs font-bold text-emerald-300">{onlineCount} Online Now</span>
+          </div>
         </div>
       </div>
 
@@ -130,7 +134,7 @@ export default async function AdminUsersPage({
               </div>
               <p className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">{stat.label}</p>
             </div>
-            <p className="text-3xl font-extrabold text-white tracking-tight">{stat.value}</p>
+            <p className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">{stat.value}</p>
           </div>
         ))}
       </div>

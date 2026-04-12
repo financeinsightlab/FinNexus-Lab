@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import CopyButton from '@/components/ui/CopyButton';
+import HeroBackground from '@/components/ui/HeroBackground';
 
 export const metadata: Metadata = {
   title: 'Speaking & Media',
@@ -88,6 +89,7 @@ export default function SpeakingPage() {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="bg-gradient-to-r from-brand-navy to-slate-900 py-20 relative overflow-hidden">
+        <HeroBackground />
         <div className="absolute inset-0 bg-pattern opacity-50" />
         <div className="wrap relative z-10 text-center">
           <p className="text-teal-400 font-semibold tracking-wider text-sm uppercase mb-4 tracking-widest">

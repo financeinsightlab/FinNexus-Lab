@@ -29,6 +29,10 @@ model User {
   predictions        Prediction[]
   comments           Comment[]
   analystScore       AnalystScore?
+  // Enhanced CMS relations
+  media              Media[]            @relation("UserMedia")
+  blockTemplates     BlockTemplate[]    @relation("UserTemplates")
+  pages              Page[]
 }
 
 model Account {
@@ -103,10 +107,122 @@ model Post {
   updatedAt       DateTime    @updatedAt
   author          User        @relation(fields: [authorId], references: [id])
   comments        Comment[]
+  // Enhanced CMS fields
+  blockContent    Json?       // Alternative to markdown content for block-based editing
+  contentType     String      @default("MARKDOWN") // MARKDOWN or BLOCKS
+  media           Media[]     @relation("PostMedia")
+  blocks          ContentBlock[] @relation("PostBlocks")
 
   @@index([type])
   @@index([published])
   @@index([slug])
+}
+
+// ─── ENHANCED CMS MODELS ──────────────────────────────────────────────────────
+
+model Media {
+  id          String   @id @default(cuid())
+  filename    String
+  originalName String
+  path        String   // Relative path from public/uploads
+  url         String   // Full URL
+  mimeType    String
+  size        Int      // Bytes
+  width       Int?
+  height      Int?
+  altText     String?
+  caption     String?
+  description String?
+  uploadedBy  String   // User ID
+  uploadedAt  DateTime @default(now())
+  metadata    Json?    // EXIF data, etc.
+  
+  // Relationships
+  user        User     @relation("UserMedia", fields: [uploadedBy], references: [id])
+  posts       Post[]   @relation("PostMedia")
+  
+  @@index([uploadedAt])
+  @@index([mimeType])
+  @@index([uploadedBy])
+}
+
+model ContentBlock {
+  id          String   @id @default(cuid())
+  type        String   // paragraph, heading, image, columns, etc.
+  data        Json     // Block-specific data
+  attributes  Json?    // Style attributes
+  order       Int      // Position in parent
+  parentId    String?  // For nested blocks
+  postId      String?  // If attached to a post
+  pageId      String?  // If attached to a page
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  post        Post?    @relation("PostBlocks", fields: [postId], references: [id])
+  page        Page?    @relation("PageBlocks", fields: [pageId], references: [id])
+  parent      ContentBlock? @relation("BlockParent", fields: [parentId], references: [id])
+  children    ContentBlock[] @relation("BlockParent")
+  
+  @@index([postId])
+  @@index([pageId])
+  @@index([parentId])
+  @@index([type])
+  @@index([order])
+}
+
+model BlockTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  type        String   // section, component, layout
+  preview     String?  // Preview image URL
+  data        Json     // Block data structure
+  category    String   // hero, feature, cta, etc.
+  isPublic    Boolean  @default(true)
+  createdBy   String   // User ID
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  user        User     @relation("UserTemplates", fields: [createdBy], references: [id])
+  
+  @@index([category])
+  @@index([type])
+  @@index([isPublic])
+  @@index([createdBy])
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     Json?    // Block-based content
+  htmlContent String?  // Rendered HTML (cached)
+  status      PageStatus @default(DRAFT)
+  seoTitle    String?
+  metaDescription String?
+  featuredImage String?
+  authorId    String
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  author      User     @relation(fields: [authorId], references: [id])
+  blocks      ContentBlock[] @relation("PageBlocks")
+  
+  @@index([slug])
+  @@index([status])
+  @@index([authorId])
+  @@index([publishedAt])
+}
+
+enum PageStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
 }
 
 model PageView {
@@ -124,6 +240,8 @@ model PageView {
   @@index([userId])
   @@index([sessionId])
   @@index([createdAt])
+  @@index([updatedAt])
+  @@index([sessionId, path]) // Composite index for upsert queries
 }
 
 model LoginEvent {
@@ -136,6 +254,7 @@ model LoginEvent {
 
   @@index([userId])
   @@index([createdAt])
+  @@index([provider]) // For groupBy queries on provider
 }
 
 model FeaturedContent {

@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import HeroBackground from '@/components/ui/HeroBackground';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
 import Tag from '@/components/ui/Tag';
@@ -53,31 +54,34 @@ export default async function ResearchReportPage({ params }: { params: Promise<{
 
   if (dbPost && dbPost.type === 'RESEARCH') {
     return (
-      <div className="min-h-screen bg-[#0B1C2C] text-slate-200">
-        <div className="max-w-4xl mx-auto px-6 pt-10 pb-16">
-          <Link href="/research" className="flex items-center gap-2 text-sm text-teal-400 hover:text-teal-300 transition-colors mb-10">
-            <ChevronLeft className="w-4 h-4" /> Back to Research Library
-          </Link>
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-               <span className="px-3 py-1 bg-teal-500/10 text-teal-400 text-xs font-bold rounded-full uppercase tracking-widest border border-teal-500/20">Strategic Research</span>
-               {!dbPost.published && <span className="px-3 py-1 bg-orange-500/10 text-orange-400 text-xs font-bold rounded-full uppercase tracking-widest border border-orange-500/20">Draft Preview</span>}
-            </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight tracking-tight">{dbPost.title}</h1>
-            <p className="text-xl text-slate-400 leading-relaxed max-w-3xl italic border-l-4 border-slate-700 pl-6">{dbPost.excerpt}</p>
-            <div className="flex flex-wrap items-center gap-6 pt-4 text-sm text-slate-500 border-t border-white/5">
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4" /> <span className="font-medium text-slate-300">{dbPost.author.name}</span>
+      <div className="min-h-screen bg-white dark:bg-[#0B1C2C] text-gray-800 dark:text-slate-200">
+        <header className="relative overflow-hidden bg-brand-navy py-16 md:py-20">
+          <HeroBackground />
+          <div className="max-w-4xl mx-auto px-6 relative z-10">
+            <Link href="/research" className="flex items-center gap-2 text-sm text-teal-400 hover:text-teal-300 transition-colors mb-10">
+              <ChevronLeft className="w-4 h-4" /> Back to Research Library
+            </Link>
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                 <span className="px-3 py-1 bg-teal-500/10 text-teal-400 text-xs font-bold rounded-full uppercase tracking-widest border border-teal-500/20">Strategic Research</span>
+                 {!dbPost.published && <span className="px-3 py-1 bg-orange-500/10 text-orange-400 text-xs font-bold rounded-full uppercase tracking-widest border border-orange-500/20">Draft Preview</span>}
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" /> <span>{new Date(dbPost.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</span>
+              <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight tracking-tight">{dbPost.title}</h1>
+              <p className="text-xl text-slate-300 leading-relaxed max-w-3xl italic border-l-4 border-slate-700 pl-6">{dbPost.excerpt}</p>
+              <div className="flex flex-wrap items-center gap-6 pt-4 text-sm text-slate-400 border-t border-white/10">
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4" /> <span className="font-medium text-slate-200">{dbPost.author?.name || 'FinNexus Admin'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" /> <span>{new Date(dbPost.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <article className="max-w-4xl mx-auto px-6 pb-32">
-          <div className="bg-[#0F2335] rounded-3xl p-8 md:p-12 border border-white/5 shadow-2xl">
-            <ContentRenderer content={dbPost.content} />
+        </header>
+        <article className="max-w-4xl mx-auto px-6 pt-12 pb-32">
+          <div className="bg-gray-50 dark:bg-[#0F2335] rounded-3xl p-8 md:p-12 border border-gray-200 dark:border-white/5 shadow-lg dark:shadow-2xl">
+            <ContentRenderer content={dbPost.content} contentType={dbPost.contentType} blocks={dbPost.blockContent} />
             <CommentSection postId={dbPost.id} currentPath={`/research/${slug}`} />
           </div>
         </article>
@@ -85,7 +89,7 @@ export default async function ResearchReportPage({ params }: { params: Promise<{
     )
   }
 
-  // 2. Fallback to Legacy System (Contentful/Local)
+  // 2. Fallback to local MDX content
   const post = await getResearchBySlug(slug);
   if (!post) notFound();
 
@@ -95,7 +99,8 @@ export default async function ResearchReportPage({ params }: { params: Promise<{
   return (
     <article className="pt-16 bg-gradient-to-b from-slate-50 to-white">
       <header className="relative overflow-hidden bg-brand-navy py-16 md:py-20">
-        <div className="wrap relative">
+        <HeroBackground />
+        <div className="wrap relative z-10">
           <div className="text-xs text-gray-300 mb-6 font-medium tracking-wide">
             <Link href="/" className="hover:text-white transition-colors">Home</Link> /{' '}
             <Link href="/research" className="hover:text-white transition-colors">Research</Link> /{' '}

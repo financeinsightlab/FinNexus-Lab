@@ -2,6 +2,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllPodcastEpisodes } from '@/lib/content';
+import HeroBackground from '@/components/ui/HeroBackground';
 
 export const metadata: Metadata = {
   title: 'Podcast | FinNexus Lab',
@@ -14,8 +15,9 @@ export default function PodcastPage() {
   return (
     <div className="min-h-screen">
       {/* Page header */}
-      <section className="bg-brand-navy py-20">
-        <div className="wrap max-w-6xl">
+      <section className="relative overflow-hidden bg-brand-navy py-20">
+        <HeroBackground />
+        <div className="wrap max-w-6xl relative z-10">
           <div className="max-w-3xl">
             <div className="flex items-center gap-3 mb-6">
               <span className="text-4xl">🎙️</span>

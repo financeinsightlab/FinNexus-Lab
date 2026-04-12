@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import HeroBackground from '@/components/ui/HeroBackground';
 // Simplified approach w/ direct routing to calculators
 
 export interface Tool {
@@ -179,8 +180,9 @@ export default function ToolsPage() {
   return (
     <div className="min-h-screen">
       {/* Page Header */}
-      <header className="bg-gradient-to-r from-brand-navy to-teal-800 py-20">
-        <div className="wrap">
+      <header className="relative overflow-hidden bg-gradient-to-r from-brand-navy to-teal-800 py-20">
+        <HeroBackground />
+        <div className="wrap relative z-10">
           <p className="section-label text-teal-300 mb-5">Financial Tools</p>
           <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
             Tools &amp; Models

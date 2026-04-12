@@ -1,6 +1,7 @@
 // FILE: app/pricing/page.tsx
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import HeroBackground from '@/components/ui/HeroBackground';
 
 export const metadata: Metadata = {
   title: 'Pricing | FinNexus Lab',
@@ -129,8 +130,9 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <section className="bg-brand-navy py-20 text-center">
-        <div className="max-w-4xl mx-auto px-6">
+      <section className="relative overflow-hidden bg-brand-navy py-20 text-center">
+        <HeroBackground />
+        <div className="max-w-4xl mx-auto px-6 relative z-10">
           <p className="text-brand-teal font-medium mb-4">Pricing</p>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Simple, Transparent Pricing

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import HeroBackground from '@/components/ui/HeroBackground'
 import type { PredictionWithAuthor } from '@/lib/predictions'
 import { createCommunityPrediction } from '@/actions/community-predictions'
 import { VerificationBadge } from '@/components/ui/VerificationBadge'
@@ -44,10 +45,11 @@ export default function PredictionsClient({ predictions, sectors, stats, isLogge
   const now = Date.now()
 
   return (
-    <div className="min-h-screen bg-[#0B0D13]">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0B0D13]">
       {/* ─── Header Stats ─── */}
-      <section className="bg-[#1A1F2E]/80 backdrop-blur-xl border-b border-white/5 py-14">
-        <div className="max-w-[1400px] mx-auto px-6">
+      <section className="relative overflow-hidden bg-brand-navy border-b border-white/5 py-14">
+        <HeroBackground />
+        <div className="relative z-10 max-w-[1400px] mx-auto px-6">
           <div className="text-center mb-10">
             <span className="text-[11px] font-bold uppercase tracking-widest text-teal-400 bg-teal-500/10 border border-teal-500/20 px-3 py-1 rounded-full">
               Intelligence Tracking
