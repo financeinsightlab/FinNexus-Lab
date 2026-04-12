@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { mediaStorage, UploadedFile, MediaFile } from './media'
 import { prisma } from './prisma'
 import { auth } from '@/auth'
+import type { Prisma } from '@prisma/client'
 
 // Media type matching Prisma schema
 export interface Media {
@@ -20,6 +21,9 @@ export interface Media {
   uploadedBy: string
   uploadedAt: Date
   metadata?: Record<string, unknown> | null
+  thumbnailUrl?: string | null
+  mediumUrl?: string | null
+  largeUrl?: string | null
 }
 
 export interface MediaUploadResult {
@@ -89,12 +93,25 @@ export function validateFiles(files: UploadedFile[]): { valid: boolean; errors: 
  * Save media to database
  */
 export async function saveMediaToDatabase(
-  mediaFile: MediaFile & { metadata?: Record<string, unknown> },
+  mediaFile: MediaFile & {
+    metadata?: Record<string, unknown>
+    thumbnailUrl?: string
+    mediumUrl?: string
+    largeUrl?: string
+  },
   userId: string,
   altText?: string,
   caption?: string,
   description?: string
 ): Promise<Media> {
+  // Prepare metadata including thumbnail URLs
+  const metadata: Record<string, unknown> = {
+    ...(mediaFile.metadata || {}),
+    ...(mediaFile.thumbnailUrl && { thumbnailUrl: mediaFile.thumbnailUrl }),
+    ...(mediaFile.mediumUrl && { mediumUrl: mediaFile.mediumUrl }),
+    ...(mediaFile.largeUrl && { largeUrl: mediaFile.largeUrl })
+  }
+
   // Use actual Prisma client
   const media = await prisma.media.create({
     data: {
@@ -110,7 +127,7 @@ export async function saveMediaToDatabase(
       caption,
       description,
       uploadedBy: userId,
-      metadata: mediaFile.metadata ? (mediaFile.metadata as any) : undefined
+      metadata: Object.keys(metadata).length > 0 ? metadata as any : undefined
     }
   })
   
@@ -130,7 +147,10 @@ export async function saveMediaToDatabase(
     description: media.description,
     uploadedBy: media.uploadedBy,
     uploadedAt: media.uploadedAt,
-    metadata: media.metadata as Record<string, unknown> | null || undefined
+    metadata: media.metadata as Record<string, unknown> | null || undefined,
+    thumbnailUrl: mediaFile.thumbnailUrl,
+    mediumUrl: mediaFile.mediumUrl,
+    largeUrl: mediaFile.largeUrl
   }
 }
 
@@ -142,7 +162,14 @@ export async function getMediaList(params: MediaListParams = {}) {
   const limit = params.limit || 20
   const skip = (page - 1) * limit
   
-  const where: any = {}
+  const where: {
+    OR?: Array<{
+      filename?: { contains: string; mode: 'insensitive' }
+      originalName?: { contains: string; mode: 'insensitive' }
+      altText?: { contains: string; mode: 'insensitive' }
+    }>
+    mimeType?: { startsWith: string }
+  } = {}
   
   if (params.search) {
     where.OR = [
@@ -156,7 +183,7 @@ export async function getMediaList(params: MediaListParams = {}) {
     where.mimeType = { startsWith: params.type }
   }
 
-  let orderBy: any = { uploadedAt: 'desc' }
+  let orderBy: { uploadedAt?: 'asc' | 'desc'; originalName?: 'asc'; size?: 'desc' } = { uploadedAt: 'desc' }
   if (params.orderBy === 'oldest') orderBy = { uploadedAt: 'asc' }
   if (params.orderBy === 'name') orderBy = { originalName: 'asc' }
   if (params.orderBy === 'size') orderBy = { size: 'desc' }
