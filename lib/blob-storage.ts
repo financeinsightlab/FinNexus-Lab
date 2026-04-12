@@ -56,80 +56,106 @@ export class BlobStorage {
     const filename = this.generateFilename(file.originalname)
     const blobPath = `${datePath}/${filename}`
     
-    // Save the original file to blob storage
-    const blob = await put(blobPath, file.buffer, {
-      access: 'public',
-      contentType: file.mimetype,
-      addRandomSuffix: false
-    })
+    console.log(`Uploading to blob storage: ${blobPath}, size: ${file.size} bytes, type: ${file.mimetype}`)
+    console.log(`Environment: NODE_ENV=${process.env.NODE_ENV}, VERCEL=${process.env.VERCEL}`)
+    console.log(`BLOB_READ_WRITE_TOKEN exists: ${!!process.env.BLOB_READ_WRITE_TOKEN}`)
+    
+    try {
+      // Save the original file to blob storage
+      console.log(`Calling put() for ${blobPath}...`)
+      const blob = await put(blobPath, file.buffer, {
+        access: 'public',
+        contentType: file.mimetype,
+        addRandomSuffix: false
+      })
+      
+      console.log(`Blob uploaded successfully: ${blob.url}`)
 
-    // Process image if it's an image
-    let width: number | undefined
-    let height: number | undefined
-    let thumbnailUrl: string | undefined
-    let mediumUrl: string | undefined
-    let largeUrl: string | undefined
+      // Process image if it's an image
+      let width: number | undefined
+      let height: number | undefined
+      let thumbnailUrl: string | undefined
+      let mediumUrl: string | undefined
+      let largeUrl: string | undefined
 
-    if (file.mimetype.startsWith('image/')) {
-      try {
-        const image = sharp(file.buffer)
-        const metadata = await image.metadata()
-        width = metadata.width
-        height = metadata.height
+      if (file.mimetype.startsWith('image/')) {
+        try {
+          console.log(`Processing image for thumbnails...`)
+          const image = sharp(file.buffer)
+          const metadata = await image.metadata()
+          width = metadata.width
+          height = metadata.height
+          console.log(`Image dimensions: ${width}x${height}`)
 
-        // Generate thumbnail (300x300)
-        const thumbnailBuffer = await image
-          .resize(300, 300, { fit: 'inside' })
-          .toBuffer()
-        
-        const thumbnailBlob = await put(`${datePath}/thumbnail/${filename}`, thumbnailBuffer, {
-          access: 'public',
-          contentType: file.mimetype,
-          addRandomSuffix: false
-        })
-        thumbnailUrl = thumbnailBlob.url
+          // Generate thumbnail (300x300)
+          const thumbnailBuffer = await image
+            .resize(300, 300, { fit: 'inside' })
+            .toBuffer()
+          
+          console.log(`Uploading thumbnail...`)
+          const thumbnailBlob = await put(`${datePath}/thumbnail/${filename}`, thumbnailBuffer, {
+            access: 'public',
+            contentType: file.mimetype,
+            addRandomSuffix: false
+          })
+          thumbnailUrl = thumbnailBlob.url
+          console.log(`Thumbnail URL: ${thumbnailUrl}`)
 
-        // Generate medium size (768x768)
-        const mediumBuffer = await image
-          .resize(768, 768, { fit: 'inside' })
-          .toBuffer()
-        
-        const mediumBlob = await put(`${datePath}/medium/${filename}`, mediumBuffer, {
-          access: 'public',
-          contentType: file.mimetype,
-          addRandomSuffix: false
-        })
-        mediumUrl = mediumBlob.url
+          // Generate medium size (768x768)
+          const mediumBuffer = await image
+            .resize(768, 768, { fit: 'inside' })
+            .toBuffer()
+          
+          console.log(`Uploading medium size...`)
+          const mediumBlob = await put(`${datePath}/medium/${filename}`, mediumBuffer, {
+            access: 'public',
+            contentType: file.mimetype,
+            addRandomSuffix: false
+          })
+          mediumUrl = mediumBlob.url
+          console.log(`Medium URL: ${mediumUrl}`)
 
-        // Generate large size (1200x1200)
-        const largeBuffer = await image
-          .resize(1200, 1200, { fit: 'inside' })
-          .toBuffer()
-        
-        const largeBlob = await put(`${datePath}/large/${filename}`, largeBuffer, {
-          access: 'public',
-          contentType: file.mimetype,
-          addRandomSuffix: false
-        })
-        largeUrl = largeBlob.url
-      } catch (error) {
-        console.warn('Image processing failed:', error)
-        // Continue even if image processing fails
+          // Generate large size (1200x1200)
+          const largeBuffer = await image
+            .resize(1200, 1200, { fit: 'inside' })
+            .toBuffer()
+          
+          console.log(`Uploading large size...`)
+          const largeBlob = await put(`${datePath}/large/${filename}`, largeBuffer, {
+            access: 'public',
+            contentType: file.mimetype,
+            addRandomSuffix: false
+          })
+          largeUrl = largeBlob.url
+          console.log(`Large URL: ${largeUrl}`)
+        } catch (error) {
+          console.warn('Image processing failed:', error)
+          // Continue even if image processing fails
+        }
       }
-    }
 
-    return {
-      filename,
-      originalName: file.originalname,
-      path: blobPath,
-      url: blob.url,
-      mimeType: file.mimetype,
-      size: file.size,
-      width,
-      height,
-      thumbnailUrl,
-      mediumUrl,
-      largeUrl
+      const result = {
+        filename,
+        originalName: file.originalname,
+        path: blobPath,
+        url: blob.url,
+        mimeType: file.mimetype,
+        size: file.size,
+        width,
+        height,
+        thumbnailUrl,
+        mediumUrl,
+        largeUrl
+      }
+      
+      console.log(`saveFile returning:`, result)
+      return result
+    } catch (error) {
+      console.error('Failed to upload to blob storage:', error)
+      if (error instanceof Error) {
+        console.error('Error details:', error.message, error.stack)
+      }
+      throw error
     }
   }
 
